@@ -5,7 +5,7 @@ const config: Partial<Config> = {
   theme: {
     extend: {
       colors: {
-        primary: "#446716",
+        primary: "#7557E9",
       },
     },
   },

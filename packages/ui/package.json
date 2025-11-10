@@ -21,6 +21,10 @@
     "dev:components": "tsc --watch",
     "lint": "eslint src --max-warnings 0"
   },
+  "dependencies": {
+    "tailwind-merge": "^3.0.1",
+    "react-spinners": "^0.15.0"
+  },
   "peerDependencies": {
     "react": "^19"
   },
