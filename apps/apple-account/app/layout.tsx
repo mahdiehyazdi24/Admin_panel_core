@@ -1,9 +1,8 @@
 import "@repo/ui/styles.css";
-import "./globals.css";
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
-
-const geist = Geist({ subsets: ["latin"] });
+import { twMerge } from "tailwind-merge";
+import { iranyekanX, iranyekanXFaNum } from "../fonts";
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -17,7 +16,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={geist.className}>{children}</body>
+      <body
+        className={twMerge(
+          iranyekanX.variable,
+          iranyekanXFaNum.variable,
+          "font-IRANYekan-x"
+        )}
+      >
+        {children}
+      </body>
     </html>
   );
 }
