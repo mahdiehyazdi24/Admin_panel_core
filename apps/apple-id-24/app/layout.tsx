@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 import { iranyekanX, iranyekanXFaNum } from "../fonts";
 import "./globals.css";
+import MainLayout from "../components/templates/layout/mainLayout";
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -15,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="fa">
       <body
         className={twMerge(
           iranyekanX.variable,
@@ -23,7 +24,9 @@ export default function RootLayout({
           "font-IRANYekan-x"
         )}
       >
+        <MainLayout loading={false} locale="fa" role={{is_client:false}}>
         {children}
+        </MainLayout>
       </body>
     </html>
   );
