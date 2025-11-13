@@ -1,3 +1,4 @@
+import StoreProvider from "@/redux";
 import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
@@ -23,7 +24,7 @@ export default function RootLayout({
           "font-IRANYekan-x"
         )}
       >
-        {children}
+        <StoreProvider>{children}</StoreProvider>
       </body>
     </html>
   );

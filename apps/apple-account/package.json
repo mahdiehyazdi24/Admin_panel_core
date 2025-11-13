@@ -8,16 +8,26 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "generate-api": "node services/code-generator/api-generator.js"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.5.1",
+    "react-hook-form": "^7.54.2",
+    "react-toastify": "^11.0.5",
+    "react-redux": "^9.2.0",
     "tailwind-merge": "^3.0.1",
     "@repo/ui": "*",
     "next": "^16.0.0",
     "react": "^19.2.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "axios": "^1.9.0",
+    "axios-logger": "^2.8.1",
+    "qs": "^6.14.0"
   },
   "devDependencies": {
+    "@types/qs": "^6.14.0",
+    "swagger-typescript-api": "^13.2.15",
     "@next/eslint-plugin-next": "^15.4.6",
     "@repo/eslint-config": "*",
     "@repo/tailwind-config": "*",
