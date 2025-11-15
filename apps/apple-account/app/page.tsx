@@ -1,9 +1,14 @@
+"use client";
+
 import { Button } from "@repo/ui";
+import { Icon } from "@repo/icons";
 
 export default function Page() {
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <Button>محصولات</Button>
+      <Button>
+        محصولات <Icon src="Edit" />
+      </Button>
     </main>
   );
 }

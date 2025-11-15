@@ -1,0 +1,26 @@
+{
+  "name": "@repo/icons",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "check-types": "tsc --noEmit",
+    "svgr": "svgr --icon --typescript ./src/assets --out-dir ./src/components",
+    "generate-icon-types": "node src/script.js",
+    "generate-icons": "npm run svgr && npm run generate-icon-types"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.1.0",
+    "next": "^16.0.0"
+  },
+  "devDependencies": {
+    "@svgr/cli": "^8.1.0",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.1",
+    "typescript": "^5.8.2"
+  }
+}

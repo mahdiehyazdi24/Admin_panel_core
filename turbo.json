@@ -26,6 +26,9 @@
     },
     "generate-api": {
       "cache": false
+    },
+    "generate-icons": {
+      "cache": false
     }
   }
 }
