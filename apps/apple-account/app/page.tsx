@@ -1,14 +1,34 @@
 "use client";
 
-import { Button } from "@repo/ui";
-import { Icon } from "@repo/icons";
+import { Container, Table } from "@repo/ui";
 
 export default function Page() {
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <Button>
-        محصولات <Icon src="Edit" />
-      </Button>
+      <div className="w-1/2">
+        <Container icon="Calendar" title="سلام خوبی؟">
+          <Table
+            headers={[
+              "شسیشسیز",
+              "شطزضص",
+              "ظطزززظش",
+              "شیضص یس ",
+              "ضص ش سی",
+              " سشیصی ",
+              "ضفغتغعن",
+            ]}
+            rows={new Array(10).fill(null).map(() => ({
+              1: "شسیشسزسی",
+              2: "یببذلذلذ",
+              3: "یز ظطزظطزظ",
+              4: "د بلسیظط",
+              5: "ظطزطظزظط",
+              6: "ظطزظطزش",
+              7: "یشسیشسی",
+            }))}
+          />
+        </Container>
+      </div>
     </main>
   );
 }
