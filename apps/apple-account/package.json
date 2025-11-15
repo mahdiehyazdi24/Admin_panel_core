@@ -9,10 +9,7 @@
     "start": "next start",
     "lint": "eslint --max-warnings 0",
     "check-types": "next typegen && tsc --noEmit",
-    "generate-api": "node services/code-generator/api-generator.js",
-    "svgr": "svgr --icon --typescript ./app/assets --out-dir ./app/components",
-    "generate-icon-types": "node app/script.js",
-    "generate-icons": "npm run svgr && npm run generate-icon-types"
+    "generate-api": "node services/code-generator/api-generator.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.1",
@@ -21,6 +18,7 @@
     "react-redux": "^9.2.0",
     "tailwind-merge": "^3.0.1",
     "@repo/ui": "*",
+    "@repo/icons": "*",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.1.0",

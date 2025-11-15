@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@repo/ui";
-import Icon from "./icon";
+import { Icon } from "@repo/icons";
 
 export default function Page() {
   return (
