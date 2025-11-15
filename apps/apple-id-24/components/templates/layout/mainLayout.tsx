@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
+import type { MenuItem } from "../../organisms/sidebar";
 import { Header, Sidebar } from "../../organisms";
 import { ScaleLoader } from "react-spinners";
 import { twMerge } from "tailwind-merge";
+import { Icon } from "@repo/icons";
 
 interface Role {
   is_client?: boolean;
@@ -63,48 +65,134 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     );
   }
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     {
-      title: "Dashboard",
-      icon: <div>icon</div>,
-      href: "/admin",
+      title: "داشبورد",
+      icon: "Dashboard",
+      href: "/",
     },
+
     {
-      title: "Users",
-      icon: <div>icon</div>,
+      title: "مدیریت کاربران",
+      icon: "User",
+      href: "/users",
+    },
+
+    {
+      title: "مدیریت نقش‌ها",
+      icon: "Users",
+      href: "/roles",
+    },
+
+    {
+      title: "مدیریت سفارشات",
+      icon: "Headphone",
       children: [
-        { title: "All Users", href: "/admin/users" },
-        { title: "Roles", href: "/admin/users/roles" },
+        { title: "لیست سفارشات", href: "/orders" },
+        { title: "سفارشات تکمیل‌شده (0)", href: "/orders/completed" },
+        { title: "در حال بررسی (0)", href: "/orders/under-review" },
+        { title: "نیاز به اطلاعات (0)", href: "/orders/get-info" },
+        { title: "برچسب‌ها", href: "/orders/labels" },
       ],
     },
+
     {
-      title: "Settings",
-      icon: <div>icon</div>,
-      href: "/admin/settings",
+      title: "مدیریت نظرات",
+      icon: "Messages",
+      children: [
+        { title: "نظرات بلاگ", href: "/comments/blogs" },
+        { title: "نظرات محصولات", href: "/comments/product" },
+      ],
+    },
+
+    {
+      title: "مدیریت محتوا",
+      icon: "Blog",
+      children: [
+        { title: "بلاگ‌ها", href: "/posts/blogs" },
+        { title: "اخبار", href: "/posts/news" },
+        { title: "تگ‌ها", href: "/posts/tags" },
+        { title: "دسته‌بندی‌ها", href: "/posts/categories" },
+        { title: "سوالات متداول", href: "/posts/faq" },
+        { title: "درباره ما", href: "/posts/about-us" },
+      ],
+    },
+
+    {
+      title: "مدیریت محصولات",
+      icon: "WidgetAdd",
+      children: [
+        { title: "لیست محصولات", href: "/products" },
+        { title: "دسته‌بندی محصولات", href: "/products/categories" },
+        { title: "محصولات پیشنهادی", href: "/products/suggested" },
+        { title: "لیست تخفیف‌ها", href: "/products/discounts" },
+        { title: "هشدارها", href: "/products/alerts" },
+      ],
+    },
+
+    {
+      title: "مدیریت اپل آیدی",
+      icon: "Apple",
+      children: [
+        { title: "لیست اپل آیدی", href: "/apple-ids" },
+        { title: "دسته‌بندی کشورها", href: "/apple-ids/categories" },
+        { title: "افزودن اپل آیدی", href: "/apple-ids/add" },
+        { title: "لاگ‌ها", href: "/apple-ids/logs" },
+        { title: "سوالات امنیتی", href: "/apple-ids/questions" },
+      ],
+    },
+
+    {
+      title: "مدیریت مالی",
+      icon: "WidgetAdd",
+      children: [
+        { title: "پکیج‌های پیشنهادی", href: "/financial/suggested-packages" },
+        { title: "مدیریت کیف پول کاربران", href: "/financial/wallets" },
+        { title: "مدیریت تراکنش‌ها", href: "/financial/transactions" },
+        { title: "مدیریت فروش", href: "/financial/sale" },
+      ],
+    },
+
+    {
+      title: "تماس با ما",
+      icon: "Phone",
+      href: "/tickets",
+    },
+
+    {
+      title: "مدیریت سایت",
+      icon: "Permission",
+      children: [
+        { title: "لیست فرم‌ها", href: "/management/forms" },
+        { title: "ایجاد فرم جدید", href: "/management/forms/create/structure" },
+        { title: "لاگ‌های ادمین", href: "/management/admins" },
+        { title: "گزارشات زمانی", href: "/management/timing/dashboard" },
+      ],
+    },
+
+    {
+      title: "تنظیمات سایت",
+      icon: "Setting",
+      href: "/settings",
     },
   ];
 
   return (
     <div
       className={twMerge(
-        "flex min-h-screen bg-gray-50 text-gray-800",
+        "flex min-h-screen bg-gray-100 text-gray-800 lg:p-10 gap-5 lg:gap-10",
         locale === "fa" ? "flex-row-reverse" : "flex-row"
       )}
     >
       <Sidebar
         locale={locale}
-        projectTitle="پنل ادمین"
-        projectIcon={<div>project icon</div>}
+        projectTitle="اپل آیدی ۲۴"
+        projectIcon={<Icon src="Apple" className="scale-150 fill-primary" />}
         menuItems={menuItems}
       />
-      <div className="flex w-full flex-col">
-        <Header />
-        <main
-          className={twMerge(
-            "m-5 mb-0 md:m-10",
-            locale === "fa" ? "lg:mr-0" : "lg:ml-0"
-          )}
-        >
+      <div className="flex w-full flex-col gap-10 lg:gap-20">
+        <Header locale={locale} />
+        <main className={twMerge("", locale === "fa" ? "lg:mr-0" : "lg:ml-0")}>
           {children}
         </main>
       </div>
