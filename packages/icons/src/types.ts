@@ -2,10 +2,300 @@ import type { FunctionComponent, SVGProps } from "react";
 export type SvgComponentType = FunctionComponent<SVGProps<SVGSVGElement>>;
 
 
+import AboutUsPageImport from "./components/AboutUsPage";
 import AddContentImport from "./components/AddContent";
+import AlertImport from "./components/Alert";
+import AlignLeftImport from "./components/AlignLeft";
+import AlignMiddleImport from "./components/AlignMiddle";
+import AlignRightImport from "./components/AlignRight";
+import AppleImport from "./components/Apple";
+import Apple2Import from "./components/Apple2";
+import ArrowBottomCircleFilledImport from "./components/ArrowBottomCircleFilled";
+import ArrowBottomFilledImport from "./components/ArrowBottomFilled";
+import ArrowBottomTailedImport from "./components/ArrowBottomTailed";
+import ArrowBottomImport from "./components/ArrowBottom";
+import ArrowLeftBoldImport from "./components/ArrowLeftBold";
+import ArrowLeftCircleImport from "./components/ArrowLeftCircle";
+import ArrowLeftImport from "./components/ArrowLeft";
+import ArrowRightBoldImport from "./components/ArrowRightBold";
+import ArrowTailedThinImport from "./components/ArrowTailedThin";
+import ArrowTopTailedImport from "./components/ArrowTopTailed";
+import BlogImport from "./components/Blog";
+import BlogPageImport from "./components/BlogPage";
+import BlueCheckImport from "./components/BlueCheck";
+import CalendarFilledImport from "./components/CalendarFilled";
+import CalendarImport from "./components/Calendar";
+import CalendarTwoImport from "./components/CalendarTwo";
+import CartImport from "./components/Cart";
+import CartSmImport from "./components/CartSm";
+import CheckImport from "./components/Check";
+import CheckboxImport from "./components/Checkbox";
+import CheckPlusImport from "./components/CheckPlus";
+import ClockImport from "./components/Clock";
+import CloseImport from "./components/Close";
+import CloudImport from "./components/Cloud";
+import CommentImport from "./components/Comment";
+import ContactUsPageImport from "./components/ContactUsPage";
+import CopyImport from "./components/Copy";
+import CreditCardsImport from "./components/CreditCards";
+import DashboardImport from "./components/Dashboard";
+import DashboardPageImport from "./components/DashboardPage";
+import DiagramImport from "./components/Diagram";
+import DollarImport from "./components/Dollar";
+import DoubleQuotationImport from "./components/DoubleQuotation";
+import DragImport from "./components/Drag";
+import EditFilledImport from "./components/EditFilled";
+import EditFramedImport from "./components/EditFramed";
+import EditImport from "./components/Edit";
+import EnvelopeImport from "./components/Envelope";
+import ExcelImport from "./components/Excel";
+import ExportImport from "./components/Export";
+import EyeImport from "./components/Eye";
+import FacebookImport from "./components/Facebook";
+import FalseImport from "./components/False";
+import FaqPageImport from "./components/FaqPage";
+import FileFilledImport from "./components/FileFilled";
+import FileImport from "./components/File";
+import FilesImport from "./components/Files";
+import FlagImport from "./components/Flag";
+import FolderImport from "./components/Folder";
+import FullScreenImport from "./components/FullScreen";
+import FxImport from "./components/Fx";
+import GalleryImport from "./components/Gallery";
+import GlobeImport from "./components/Globe";
+import GuideImport from "./components/Guide";
+import H5Import from "./components/H5";
+import HeadphoneImport from "./components/Headphone";
+import HomeImport from "./components/Home";
+import ImageImport from "./components/Image";
+import InstagramImport from "./components/Instagram";
+import KeyFramedImport from "./components/KeyFramed";
+import LineChartImport from "./components/LineChart";
+import LinkImport from "./components/Link";
+import LinkedinImport from "./components/Linkedin";
+import ListImport from "./components/List";
+import LoadingSpinnerImport from "./components/LoadingSpinner";
+import LockImport from "./components/Lock";
+import LogImport from "./components/Log";
+import LogoImport from "./components/Logo";
+import LogoutImport from "./components/Logout";
+import MailFilledImport from "./components/MailFilled";
+import MailImport from "./components/Mail";
+import MainPageImport from "./components/MainPage";
+import MedalImport from "./components/Medal";
+import MenuImport from "./components/Menu";
+import MessageImport from "./components/Message";
+import MessagesImport from "./components/Messages";
+import MinusImport from "./components/Minus";
+import MobileImport from "./components/Mobile";
+import MobileTwoImport from "./components/MobileTwo";
+import MoveImport from "./components/Move";
+import NotConnectedImport from "./components/NotConnected";
+import NotFoundImport from "./components/NotFound";
+import OmegaImport from "./components/Omega";
+import OrderImport from "./components/Order";
+import PaperPlainImport from "./components/PaperPlain";
+import PcImport from "./components/Pc";
+import PermissionImport from "./components/Permission";
+import PhoneImport from "./components/Phone";
+import PlusImport from "./components/Plus";
+import ProductPageImport from "./components/ProductPage";
+import ProductsImport from "./components/Products";
+import QuestionMarkFramedImport from "./components/QuestionMarkFramed";
+import RadioBtnImport from "./components/RadioBtn";
+import RectangleImport from "./components/Rectangle";
+import RedXImport from "./components/RedX";
+import ReturnImport from "./components/Return";
+import RulerAndPenImport from "./components/RulerAndPen";
+import SalesImport from "./components/Sales";
+import SaveImport from "./components/Save";
+import SearchImport from "./components/Search";
+import SearchFramedImport from "./components/SearchFramed";
+import SelectOptImport from "./components/SelectOpt";
+import SeperatorImport from "./components/Seperator";
+import SettingImport from "./components/Setting";
+import SiteLogoImport from "./components/SiteLogo";
+import SmallPlusImport from "./components/SmallPlus";
+import SmileFaceReactangleImport from "./components/SmileFaceReactangle";
+import SmileyImport from "./components/Smiley";
+import SmsImport from "./components/Sms";
+import SortImport from "./components/Sort";
+import SpinnerImport from "./components/Spinner";
+import SupportImport from "./components/Support";
+import SwitchImport from "./components/Switch";
+import SystemImport from "./components/System";
+import TabImport from "./components/Tab";
+import TabletImport from "./components/Tablet";
+import TabTwoImport from "./components/TabTwo";
+import TagImport from "./components/Tag";
+import TelegramImport from "./components/Telegram";
+import TextInputImport from "./components/TextInput";
+import ThreeColumnImport from "./components/ThreeColumn";
+import TickCircleFilledImport from "./components/TickCircleFilled";
+import TickCircleImport from "./components/TickCircle";
+import TickImport from "./components/Tick";
+import TicketImport from "./components/Ticket";
+import TiktokImport from "./components/Tiktok";
+import TinyLockImport from "./components/TinyLock";
+import TrashImport from "./components/Trash";
+import TrueImport from "./components/True";
+import TwitterImport from "./components/Twitter";
+import TwoColumnImport from "./components/TwoColumn";
+import UserImport from "./components/User";
+import UserFramedImport from "./components/UserFramed";
+import UsersImport from "./components/Users";
+import WalletImport from "./components/Wallet";
+import WhatsappImport from "./components/Whatsapp";
+import WidgetAddImport from "./components/WidgetAdd";
+import YoutubeImport from "./components/Youtube";
 
 export const IconObj = {
+  AboutUsPage: AboutUsPageImport as SvgComponentType,
   AddContent: AddContentImport as SvgComponentType,
+  Alert: AlertImport as SvgComponentType,
+  AlignLeft: AlignLeftImport as SvgComponentType,
+  AlignMiddle: AlignMiddleImport as SvgComponentType,
+  AlignRight: AlignRightImport as SvgComponentType,
+  Apple: AppleImport as SvgComponentType,
+  Apple2: Apple2Import as SvgComponentType,
+  ArrowBottomCircleFilled: ArrowBottomCircleFilledImport as SvgComponentType,
+  ArrowBottomFilled: ArrowBottomFilledImport as SvgComponentType,
+  ArrowBottomTailed: ArrowBottomTailedImport as SvgComponentType,
+  ArrowBottom: ArrowBottomImport as SvgComponentType,
+  ArrowLeftBold: ArrowLeftBoldImport as SvgComponentType,
+  ArrowLeftCircle: ArrowLeftCircleImport as SvgComponentType,
+  ArrowLeft: ArrowLeftImport as SvgComponentType,
+  ArrowRightBold: ArrowRightBoldImport as SvgComponentType,
+  ArrowTailedThin: ArrowTailedThinImport as SvgComponentType,
+  ArrowTopTailed: ArrowTopTailedImport as SvgComponentType,
+  Blog: BlogImport as SvgComponentType,
+  BlogPage: BlogPageImport as SvgComponentType,
+  BlueCheck: BlueCheckImport as SvgComponentType,
+  CalendarFilled: CalendarFilledImport as SvgComponentType,
+  Calendar: CalendarImport as SvgComponentType,
+  CalendarTwo: CalendarTwoImport as SvgComponentType,
+  Cart: CartImport as SvgComponentType,
+  CartSm: CartSmImport as SvgComponentType,
+  Check: CheckImport as SvgComponentType,
+  Checkbox: CheckboxImport as SvgComponentType,
+  CheckPlus: CheckPlusImport as SvgComponentType,
+  Clock: ClockImport as SvgComponentType,
+  Close: CloseImport as SvgComponentType,
+  Cloud: CloudImport as SvgComponentType,
+  Comment: CommentImport as SvgComponentType,
+  ContactUsPage: ContactUsPageImport as SvgComponentType,
+  Copy: CopyImport as SvgComponentType,
+  CreditCards: CreditCardsImport as SvgComponentType,
+  Dashboard: DashboardImport as SvgComponentType,
+  DashboardPage: DashboardPageImport as SvgComponentType,
+  Diagram: DiagramImport as SvgComponentType,
+  Dollar: DollarImport as SvgComponentType,
+  DoubleQuotation: DoubleQuotationImport as SvgComponentType,
+  Drag: DragImport as SvgComponentType,
+  EditFilled: EditFilledImport as SvgComponentType,
+  EditFramed: EditFramedImport as SvgComponentType,
+  Edit: EditImport as SvgComponentType,
+  Envelope: EnvelopeImport as SvgComponentType,
+  Excel: ExcelImport as SvgComponentType,
+  Export: ExportImport as SvgComponentType,
+  Eye: EyeImport as SvgComponentType,
+  Facebook: FacebookImport as SvgComponentType,
+  False: FalseImport as SvgComponentType,
+  FaqPage: FaqPageImport as SvgComponentType,
+  FileFilled: FileFilledImport as SvgComponentType,
+  File: FileImport as SvgComponentType,
+  Files: FilesImport as SvgComponentType,
+  Flag: FlagImport as SvgComponentType,
+  Folder: FolderImport as SvgComponentType,
+  FullScreen: FullScreenImport as SvgComponentType,
+  Fx: FxImport as SvgComponentType,
+  Gallery: GalleryImport as SvgComponentType,
+  Globe: GlobeImport as SvgComponentType,
+  Guide: GuideImport as SvgComponentType,
+  H5: H5Import as SvgComponentType,
+  Headphone: HeadphoneImport as SvgComponentType,
+  Home: HomeImport as SvgComponentType,
+  Image: ImageImport as SvgComponentType,
+  Instagram: InstagramImport as SvgComponentType,
+  KeyFramed: KeyFramedImport as SvgComponentType,
+  LineChart: LineChartImport as SvgComponentType,
+  Link: LinkImport as SvgComponentType,
+  Linkedin: LinkedinImport as SvgComponentType,
+  List: ListImport as SvgComponentType,
+  LoadingSpinner: LoadingSpinnerImport as SvgComponentType,
+  Lock: LockImport as SvgComponentType,
+  Log: LogImport as SvgComponentType,
+  Logo: LogoImport as SvgComponentType,
+  Logout: LogoutImport as SvgComponentType,
+  MailFilled: MailFilledImport as SvgComponentType,
+  Mail: MailImport as SvgComponentType,
+  MainPage: MainPageImport as SvgComponentType,
+  Medal: MedalImport as SvgComponentType,
+  Menu: MenuImport as SvgComponentType,
+  Message: MessageImport as SvgComponentType,
+  Messages: MessagesImport as SvgComponentType,
+  Minus: MinusImport as SvgComponentType,
+  Mobile: MobileImport as SvgComponentType,
+  MobileTwo: MobileTwoImport as SvgComponentType,
+  Move: MoveImport as SvgComponentType,
+  NotConnected: NotConnectedImport as SvgComponentType,
+  NotFound: NotFoundImport as SvgComponentType,
+  Omega: OmegaImport as SvgComponentType,
+  Order: OrderImport as SvgComponentType,
+  PaperPlain: PaperPlainImport as SvgComponentType,
+  Pc: PcImport as SvgComponentType,
+  Permission: PermissionImport as SvgComponentType,
+  Phone: PhoneImport as SvgComponentType,
+  Plus: PlusImport as SvgComponentType,
+  ProductPage: ProductPageImport as SvgComponentType,
+  Products: ProductsImport as SvgComponentType,
+  QuestionMarkFramed: QuestionMarkFramedImport as SvgComponentType,
+  RadioBtn: RadioBtnImport as SvgComponentType,
+  Rectangle: RectangleImport as SvgComponentType,
+  RedX: RedXImport as SvgComponentType,
+  Return: ReturnImport as SvgComponentType,
+  RulerAndPen: RulerAndPenImport as SvgComponentType,
+  Sales: SalesImport as SvgComponentType,
+  Save: SaveImport as SvgComponentType,
+  Search: SearchImport as SvgComponentType,
+  SearchFramed: SearchFramedImport as SvgComponentType,
+  SelectOpt: SelectOptImport as SvgComponentType,
+  Seperator: SeperatorImport as SvgComponentType,
+  Setting: SettingImport as SvgComponentType,
+  SiteLogo: SiteLogoImport as SvgComponentType,
+  SmallPlus: SmallPlusImport as SvgComponentType,
+  SmileFaceReactangle: SmileFaceReactangleImport as SvgComponentType,
+  Smiley: SmileyImport as SvgComponentType,
+  Sms: SmsImport as SvgComponentType,
+  Sort: SortImport as SvgComponentType,
+  Spinner: SpinnerImport as SvgComponentType,
+  Support: SupportImport as SvgComponentType,
+  Switch: SwitchImport as SvgComponentType,
+  System: SystemImport as SvgComponentType,
+  Tab: TabImport as SvgComponentType,
+  Tablet: TabletImport as SvgComponentType,
+  TabTwo: TabTwoImport as SvgComponentType,
+  Tag: TagImport as SvgComponentType,
+  Telegram: TelegramImport as SvgComponentType,
+  TextInput: TextInputImport as SvgComponentType,
+  ThreeColumn: ThreeColumnImport as SvgComponentType,
+  TickCircleFilled: TickCircleFilledImport as SvgComponentType,
+  TickCircle: TickCircleImport as SvgComponentType,
+  Tick: TickImport as SvgComponentType,
+  Ticket: TicketImport as SvgComponentType,
+  Tiktok: TiktokImport as SvgComponentType,
+  TinyLock: TinyLockImport as SvgComponentType,
+  Trash: TrashImport as SvgComponentType,
+  True: TrueImport as SvgComponentType,
+  Twitter: TwitterImport as SvgComponentType,
+  TwoColumn: TwoColumnImport as SvgComponentType,
+  User: UserImport as SvgComponentType,
+  UserFramed: UserFramedImport as SvgComponentType,
+  Users: UsersImport as SvgComponentType,
+  Wallet: WalletImport as SvgComponentType,
+  Whatsapp: WhatsappImport as SvgComponentType,
+  WidgetAdd: WidgetAddImport as SvgComponentType,
+  Youtube: YoutubeImport as SvgComponentType,
 };
 
 export type IconKeys = keyof typeof IconObj;
