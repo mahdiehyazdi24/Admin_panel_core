@@ -34,6 +34,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const pathname = usePathname();
   const [openMenus, setOpenMenus] = React.useState<Record<string, boolean>>({});
   const [isMobileOpen, setIsMobileOpen] = React.useState(false);
+  const [minimize, setMinimize] = React.useState(false);
   const sidebarRef = React.useRef<HTMLDivElement>(null);
 
   const isRTL = locale === "fa";
@@ -85,15 +86,45 @@ const Sidebar: React.FC<SidebarProps> = ({
       <aside
         ref={sidebarRef}
         className={twMerge(
-          "fixed min-w-[300px] z-40 flex h-full flex-col bg-white shadow-md transition-all duration-300 md:static md:translate-x-0 md:w-64 lg:rounded-2xl",
+          "fixed  z-40 flex h-full flex-col bg-white shadow-md transition-all duration-300 md:static md:translate-x-0  lg:rounded-2xl",
           isRTL ? "right-0" : "left-0",
           isMobileOpen
             ? "translate-x-0"
             : isRTL
               ? "translate-x-full"
-              : "-translate-x-full"
+              : "-translate-x-full",
+          minimize ? "w-fit" : "min-w-[300px] md:w-64"
         )}
       >
+        {minimize ? (
+          <button
+            onClick={() => setMinimize((x) => !x)}
+            className={twMerge(
+              "bg-primary absolute top-8 flex h-7 w-7 items-center justify-center rounded-full max-lg:hidden",
+              locale === "fa" ? "-left-4" : "-right-4 rotate-180"
+            )}
+          >
+            <Icon
+              src="ArrowLeftBold"
+              className="fill-white stroke-white"
+              width={8}
+            />
+          </button>
+        ) : (
+          <button
+            onClick={() => setMinimize((x) => !x)}
+            className={twMerge(
+              "bg-primary absolute top-7 flex h-10 w-10 items-center justify-center rounded-full max-lg:hidden",
+              locale === "fa" ? "-left-5 rotate-180" : "-right-5"
+            )}
+          >
+            <Icon
+              src="ArrowLeftBold"
+              className="fill-white stroke-white"
+              width={12}
+            />
+          </button>
+        )}
         {/* Header */}
         <div
           className={twMerge(
@@ -102,7 +133,9 @@ const Sidebar: React.FC<SidebarProps> = ({
           )}
         >
           {projectIcon && <span>{projectIcon}</span>}
-          <span>{projectTitle}</span>
+          <span className={twMerge(minimize ? "hidden" : "")}>
+            {projectTitle}
+          </span>
         </div>
 
         {/* Menu List */}
@@ -147,17 +180,27 @@ const Sidebar: React.FC<SidebarProps> = ({
                       {item.href ? (
                         <Link
                           href={item.href}
-                          className="block w-full"
+                          className={twMerge(
+                            "block w-full",
+                            minimize ? "hidden" : ""
+                          )}
                           onClick={closeSidebarMobile}
                         >
                           {item.title}
                         </Link>
                       ) : (
-                        <span>{item.title}</span>
+                        <span className={twMerge(minimize ? "hidden" : "")}>
+                          {item.title}
+                        </span>
                       )}
                     </div>
 
-                    {hasChildren && <Icon src="ArrowBottom" />}
+                    {hasChildren && (
+                      <Icon
+                        src="ArrowBottom"
+                        className={twMerge(minimize ? "hidden" : "")}
+                      />
+                    )}
                   </div>
 
                   {/* Submenu */}
@@ -165,7 +208,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                     <div
                       className={twMerge(
                         "overflow-hidden transition-all duration-300",
-                        isOpen ? "max-h-96" : "max-h-0"
+                        isOpen ? "max-h-96" : "max-h-0",
+                        minimize ? "hidden" : ""
                       )}
                     >
                       <ul
