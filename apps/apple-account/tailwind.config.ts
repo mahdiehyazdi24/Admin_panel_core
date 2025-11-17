@@ -9,7 +9,15 @@ const config: Partial<Config> = {
         IRANYekanX: ["var(--font-iranyekanx)"],
       },
       colors: {
-        primary: "#7557E9",
+        primary: { DEFAULT: "#7557E9", light: "#EAE6FC" },
+        gray: {
+          light: "#ECEEF6",
+          50: "#F3F2F2",
+          75: "#d9d9d9",
+          100: "#b5b5b5",
+          150: "#BFBABE",
+          200: "#566a7f",
+        },
       },
     },
   },
