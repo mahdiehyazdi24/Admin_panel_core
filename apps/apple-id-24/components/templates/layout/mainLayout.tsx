@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import type { MenuItem } from "../../organisms/sidebar";
+import type { MenuItem } from "../../organisms/sidebar/types";
 import { Header, Sidebar } from "../../organisms";
 import { ScaleLoader } from "react-spinners";
 import { twMerge } from "tailwind-merge";
@@ -17,7 +17,7 @@ interface MainLayoutProps {
   loading: boolean | null;
   role?: Role | null;
   locale: "fa" | "en" | string;
-  menuItems: MenuItem[]
+  menuItems: MenuItem[];
 }
 
 const pushToClient = () => {
@@ -67,8 +67,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     );
   }
 
-  
-
   return (
     <div
       className={twMerge(
@@ -84,7 +82,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
       />
       <div className="flex w-full flex-col gap-10 lg:gap-20">
         <Header locale={locale} />
-        <main className={twMerge("", locale === "fa" ? "lg:mr-0" : "lg:ml-0")}>
+        <main
+          dir={locale === "fa" ? "rtl" : "ltr"}
+          className={twMerge("", locale === "fa" ? "lg:mr-0" : "lg:ml-0")}
+        >
           {children}
         </main>
       </div>
