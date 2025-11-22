@@ -1,65 +1,95 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { twMerge } from "tailwind-merge";
+import {
+  useFloating,
+  offset,
+  flip,
+  shift,
+  autoUpdate,
+  useClick,
+  useHover,
+  useDismiss,
+  useRole,
+  useInteractions,
+  FloatingPortal,
+} from "@floating-ui/react";
 
 interface DropdownProps {
   label: React.ReactNode;
   children: React.ReactNode;
   locale?: "fa" | "en" | string;
   align?: "left" | "right";
-  trigger?: "hover" | "click"; 
+  trigger?: "hover" | "click";
 }
 
 const Dropdown: React.FC<DropdownProps> & {
   Item: React.FC<DropdownItemProps>;
-} = ({ label, children, locale = "fa", align = "right", trigger = "click" }: DropdownProps) => {
+} = ({
+  label,
+  children,
+  locale = "fa",
+  align = "right",
+  trigger = "click",
+}: DropdownProps) => {
   const isRTL = locale === "fa";
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (trigger !== "click") return;
+  const { refs, floatingStyles, context } = useFloating({
+    open,
+    onOpenChange: setOpen,
+    middleware: [offset(6), flip(), shift({ padding: 8 })],
+    whileElementsMounted: autoUpdate,
+    placement:
+      align === "right"
+        ? isRTL
+          ? "bottom-end"
+          : "bottom-start"
+        : isRTL
+          ? "bottom-start"
+          : "bottom-end",
+  });
 
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [trigger]);
+  const click = useClick(context, { enabled: trigger === "click" });
+  const hover = useHover(context, {
+    enabled: trigger === "hover",
+    delay: { open: 100, close: 100 },
+  });
+  const dismiss = useDismiss(context);
+  const role = useRole(context);
+
+  const { getReferenceProps, getFloatingProps } = useInteractions([
+    click,
+    hover,
+    dismiss,
+    role,
+  ]);
 
   return (
-    <div
-      ref={ref}
-      className="relative inline-block text-left"
-      onMouseEnter={() => trigger === "hover" && setOpen(true)}
-      onMouseLeave={() => trigger === "hover" && setOpen(false)}
-    >
+    <div className="relative inline-block text-left">
       <button
-        onClick={() => trigger === "click" && setOpen((prev) => !prev)}
+        ref={refs.setReference}
+        {...getReferenceProps()}
         className="focus:outline-none"
       >
         {label}
       </button>
 
-      {open && (
-        <div
-          className={twMerge(
-            "absolute mt-2 w-48 origin-top-right rounded-xl bg-white shadow-lg ring-1 ring-black/5 py-2 z-50 transition",
-            align === "right"
-              ? isRTL
-                ? "right-0"
-                : "left-0"
-              : isRTL
-                ? "left-0"
-                : "right-0"
-          )}
-        >
-          {children}
-        </div>
-      )}
+      <FloatingPortal>
+        {open && (
+          <div
+            ref={refs.setFloating}
+            style={floatingStyles}
+            {...getFloatingProps()}
+            className={twMerge(
+              "mt-2 w-48 rounded-xl bg-white shadow-lg ring-1 ring-black/5 py-2 z-50 transition"
+            )}
+          >
+            {children}
+          </div>
+        )}
+      </FloatingPortal>
     </div>
   );
 };
@@ -77,7 +107,7 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
   onClick,
   icon,
   locale = "fa",
-  className
+  className,
 }) => {
   const isRTL = locale === "fa";
 
