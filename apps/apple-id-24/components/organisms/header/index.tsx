@@ -2,6 +2,7 @@ import React from "react";
 import { Icon } from "@repo/icons";
 import { Button, Dropdown } from "@repo/ui";
 import { twMerge } from "tailwind-merge";
+import Avatar from "../avatar";
 
 interface HeaderProps {
   locale: "fa" | "en" | string;
@@ -21,13 +22,11 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
         label={
           <div
             className={twMerge(
-              "flex items-center gap-6 group cursor-pointer", 
+              "flex items-center gap-6 group cursor-pointer",
               isRTL ? "flex-row-reverse" : "flex-row"
             )}
           >
-            <div className="size-10 rounded-full bg-amber-300 text-center flex items-center justify-center">
-              <span>ع ع</span>
-            </div>
+            <Avatar name="علیرضا عامری" />
 
             <Icon
               src="ArrowBottom"
@@ -47,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({ locale }) => {
         <Dropdown.Item
           locale={locale}
           className="text-red-300 hover:bg-red-300/20"
-          icon={<Icon src="Logout"  className="fill-red-500 stroke-red-500"  />}
+          icon={<Icon src="Logout" className="fill-red-500 stroke-red-500" />}
           onClick={() => console.log("Logout clicked")}
         >
           خروج
