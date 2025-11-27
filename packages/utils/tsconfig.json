@@ -1,0 +1,14 @@
+{
+  "extends": "@repo/typescript-config/base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "src",
+    "module": "Preserve",
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "jsx": "react"
+  },
+  "include": ["src", "types"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -3,6 +3,7 @@
 import { useAppSelector } from "@/redux/hooks";
 import services, { useRequest } from "@/services";
 import { Container, Table } from "@repo/ui";
+import { formatPrice, formatSimpleJalaliDate } from "@repo/utils";
 import { twMerge } from "tailwind-merge";
 
 export default function Page() {
@@ -30,13 +31,13 @@ export default function Page() {
                 0: user.phone_number,
                 1: `${user.name || ""} ${user.family || ""}`.trim() || "ناشناس",
                 2: <div></div>,
-                3: user.created_at,
+                3: formatSimpleJalaliDate(user.created_at, "dateHour"),
                 4: (
                   <p className={twMerge(!user.is_active && "text-red-500")}>
                     {user.is_active ? "فعال" : "بن"}
                   </p>
                 ),
-                5: user.wallet.balance,
+                5: formatPrice(user.wallet.balance),
                 6: user.role.title,
               })) || []
             }
