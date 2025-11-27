@@ -2,15 +2,12 @@
 
 import services, { useRequest } from "@/services";
 import { Container, Table } from "@repo/ui";
-import { useEffect } from "react";
 
 export default function Page() {
   useRequest(services.userControllerGetUsersAsyncThunk, {
     firstCall: { query: { page: 1, limit: 10 } },
   });
-  useEffect(() => {
-    services.userControllerGetUsers();
-  }, []);
+
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
       <div className="w-1/2">

@@ -10,7 +10,7 @@ dotenv.config();
 const username = process.env.SWAGGER_USERNAME;
 const password = process.env.SWAGGER_PASSWORD;
 const swaggerUrl = process.env.SWAGGER_URL;
-const outputBasePath = path.resolve(process.cwd(), "./src/swagger");
+const outputBasePath = path.resolve(process.cwd(), "./services/swagger");
 
 async function fetchSwaggerJson() {
   const encodedAuth = Buffer.from(`${username}:${password}`).toString("base64");
@@ -53,7 +53,7 @@ async function generateClient() {
     extractEnums: true,
     httpClientType: "axios",
     unwrapResponseData: true,
-    templates: "./src/code-generator/templates/modular",
+    templates: "./services/code-generator/templates/modular",
   });
 
   console.log("API client generation complete.");
