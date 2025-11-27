@@ -1,31 +1,46 @@
 "use client";
 
+import { useAppSelector } from "@/redux/hooks";
+import services, { useRequest } from "@/services";
 import { Container, Table } from "@repo/ui";
+import { formatPrice, formatSimpleJalaliDate } from "@repo/utils";
+import { twMerge } from "tailwind-merge";
 
 export default function Page() {
+  const data = useAppSelector((store) => store.users.list);
+  useRequest(services.userControllerGetUsersAsyncThunk, {
+    firstCall: { query: { page: 1, limit: 10 } },
+  });
+
   return (
     <main className="flex flex-col items-center justify-between min-h-screen p-24">
-      <div className="w-1/2">
-        <Container icon="Calendar" title="سلام خوبی؟">
+      <div className="w-2/3">
+        <Container icon="User" title="لیست کاربران">
           <Table
             headers={[
-              "شسیشسیز",
-              "شطزضص",
-              "ظطزززظش",
-              "شیضص یس ",
-              "ضص ش سی",
-              " سشیصی ",
-              "ضفغتغعن",
+              "شماره همراه",
+              "نام و نام خانوادگی",
+              "عملیات",
+              "تاریخ عضویت",
+              "وضعیت",
+              "موجودی",
+              "نقش",
             ]}
-            rows={new Array(10).fill(null).map(() => ({
-              1: "شسیشسزسی",
-              2: "یببذلذلذ",
-              3: "یز ظطزظطزظ",
-              4: "د بلسیظط",
-              5: "ظطزطظزظط",
-              6: "ظطزظطزش",
-              7: "یشسیشسی",
-            }))}
+            rows={
+              data?.users.map((user) => ({
+                0: user.phone_number,
+                1: `${user.name || ""} ${user.family || ""}`.trim() || "ناشناس",
+                2: <div></div>,
+                3: formatSimpleJalaliDate(user.created_at, "dateHour"),
+                4: (
+                  <p className={twMerge(!user.is_active && "text-red-500")}>
+                    {user.is_active ? "فعال" : "بن"}
+                  </p>
+                ),
+                5: formatPrice(user.wallet.balance),
+                6: user.role.title,
+              })) || []
+            }
           />
         </Container>
       </div>

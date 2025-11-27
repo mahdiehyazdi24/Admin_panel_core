@@ -13,7 +13,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class SitemapAuthXml<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class SitemapAuthXml<
+  SecurityDataType = unknown,
+> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *

@@ -15,7 +15,8 @@ export const seo = new SitemapXml({
 });
 
 services.instance.interceptors.request.use((req) => {
-  const baseURL = process.env.NEXT_PUBLIC_API_URL;
+  const baseURL =
+    typeof window === "undefined" ? process.env.NEXT_PUBLIC_API_URL : undefined;
   req.baseURL = baseURL;
   return req;
 });
@@ -28,6 +29,7 @@ registerAxiosErrorInterceptor(services.instance);
 
 export * from "./models";
 export * from "./swagger";
+export * from "./request";
 
 // export * from "./socket";
 export default services;

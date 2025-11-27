@@ -164,6 +164,7 @@ import {
   GetContactResponseDto,
   GetCountryResponseDto,
   GetDeletedProductsResponseDto,
+  GetDetailAccountScraperResponseDto,
   GetDetailCountryResponseDto,
   GetDetailEmailDomainResponseDto,
   GetDetailNoticResponseDto,
@@ -197,7 +198,6 @@ import {
   GetPostResponseDto,
   GetProductAssignedToFormResponseDto,
   GetProductByIdResponseDto,
-  GetProductCategoryListResponseDto,
   GetProductCategoryResponseDto,
   GetProductsResponseDto,
   GetResponseDto,
@@ -205,6 +205,7 @@ import {
   GetRoleResponseByIdDto,
   GetRoleResponseDto,
   GetSettingDetailResponseDto,
+  GetStatusScraperListResponseDto,
   GetSuggestResponseDto,
   GetTagResponseDto,
   GetTimerRequestDetailResponseDto,
@@ -218,6 +219,7 @@ import {
   GetUsersListResponseDto,
   GroupByFields,
   InvoiceStatStatResponseDto,
+  LABEL_STATUS,
   LoginDto,
   LoginResponseDto,
   NOTIFIER_GATEWAY_PROVIDER,
@@ -229,6 +231,7 @@ import {
   OrderLabelDto,
   OrderResponseDto,
   OrderSearchResponseDto,
+  OrderStatDailyResponseDto,
   OrderStatListResponseDto,
   OrderStatResponseDto,
   OrderStatStatusCount,
@@ -242,6 +245,7 @@ import {
   PrismaSortOrder,
   PRODUCT_STATUS,
   PRODUCT_TYPE,
+  ProductCategoryControllerGetCategoriesParamsExpandEnum,
   ProductPayDto,
   PublishCodeScraperDto,
   PublishCodeScraperResponseDto,
@@ -372,7 +376,9 @@ import {
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Api<
+  SecurityDataType = unknown,
+> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -382,7 +388,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/auth/authorize
    */
   authControllerAuthorize = (data: RegisterDto, params: RequestParams = {}) =>
-    this.request<RegisterResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      RegisterResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/auth/authorize`,
       method: "POST",
       body: data,
@@ -409,7 +418,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/auth/authenticate
    */
   authControllerAuthenticate = (data: LoginDto, params: RequestParams = {}) =>
-    this.request<LoginResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      LoginResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/auth/authenticate`,
       method: "POST",
       body: data,
@@ -437,7 +449,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   authControllerGetTokenForWs = (params: RequestParams = {}) =>
-    this.request<GetTokenWsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetTokenWsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/auth/ws/token`,
       method: "POST",
       secure: true,
@@ -490,7 +505,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   authControllerRefresh = (data: RefreshTokenDto, params: RequestParams = {}) =>
-    this.request<LoginResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      LoginResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/auth/refresh`,
       method: "POST",
       body: data,
@@ -518,8 +536,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/auth/ban/{userId}
    * @secure
    */
-  authControllerBanUser = (userId: string, data: BanStatusDto, params: RequestParams = {}) =>
-    this.request<BanUserResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  authControllerBanUser = (
+    userId: string,
+    data: BanStatusDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      BanUserResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/auth/ban/${userId}`,
       method: "PATCH",
       body: data,
@@ -533,8 +558,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for authControllerBanUser */
   authControllerBanUserAsyncThunk = createAsyncThunk(
     "authControllerBanUser",
-    async (data: { userId: string; data: BanStatusDto; params?: RequestParams }) => {
-      return await this.authControllerBanUser(data.userId, data.data, data?.params);
+    async (data: {
+      userId: string;
+      data: BanStatusDto;
+      params?: RequestParams;
+    }) => {
+      return await this.authControllerBanUser(
+        data.userId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -548,7 +581,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   authControllerGetUserPermission = (params: RequestParams = {}) =>
-    this.request<PermissionResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      PermissionResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/auth/permission`,
       method: "GET",
       secure: true,
@@ -604,7 +640,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetAdminAuditListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetAdminAuditListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/admin-audit`,
       method: "GET",
       query: query,
@@ -630,7 +669,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.adminAuditControllerGetCategories(data?.query, data?.params);
+      return await this.adminAuditControllerGetCategories(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -643,8 +685,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/admin-audit/{admin_audit_id}
    * @secure
    */
-  adminAuditControllerGetAdminAuditById = (adminAuditId: string, params: RequestParams = {}) =>
-    this.request<GetOneAdminAuditResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  adminAuditControllerGetAdminAuditById = (
+    adminAuditId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetOneAdminAuditResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/admin-audit/${adminAuditId}`,
       method: "GET",
       secure: true,
@@ -657,7 +705,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   adminAuditControllerGetAdminAuditByIdAsyncThunk = createAsyncThunk(
     "adminAuditControllerGetAdminAuditById",
     async (data: { adminAuditId: string; params?: RequestParams }) => {
-      return await this.adminAuditControllerGetAdminAuditById(data.adminAuditId, data?.params);
+      return await this.adminAuditControllerGetAdminAuditById(
+        data.adminAuditId,
+        data?.params,
+      );
     },
   );
 
@@ -670,8 +721,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/payment/wallet/charge
    * @secure
    */
-  paymentControllerWalletCharge = (data: WalletChargeDto, params: RequestParams = {}) =>
-    this.request<PurchaseProductResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  paymentControllerWalletCharge = (
+    data: WalletChargeDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      PurchaseProductResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/payment/wallet/charge`,
       method: "POST",
       body: data,
@@ -699,8 +756,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/payment/product/purchase
    * @secure
    */
-  paymentControllerProductPurchase = (data: ProductPayDto, params: RequestParams = {}) =>
-    this.request<PurchaseProductResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  paymentControllerProductPurchase = (
+    data: ProductPayDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      PurchaseProductResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/payment/product/purchase`,
       method: "POST",
       body: data,
@@ -715,7 +778,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   paymentControllerProductPurchaseAsyncThunk = createAsyncThunk(
     "paymentControllerProductPurchase",
     async (data: { data: ProductPayDto; params?: RequestParams }) => {
-      return await this.paymentControllerProductPurchase(data.data, data?.params);
+      return await this.paymentControllerProductPurchase(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -728,7 +794,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/payment/product/wallet/purchase
    * @secure
    */
-  paymentControllerProductPurchaseByWallet = (data: WalletWithdrawalDto, params: RequestParams = {}) =>
+  paymentControllerProductPurchaseByWallet = (
+    data: WalletWithdrawalDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       PurchaseProductByWalletResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -747,7 +816,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   paymentControllerProductPurchaseByWalletAsyncThunk = createAsyncThunk(
     "paymentControllerProductPurchaseByWallet",
     async (data: { data: WalletWithdrawalDto; params?: RequestParams }) => {
-      return await this.paymentControllerProductPurchaseByWallet(data.data, data?.params);
+      return await this.paymentControllerProductPurchaseByWallet(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -765,7 +837,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: VerifyTransactionDto,
     params: RequestParams = {},
   ) =>
-    this.request<VerifyTransactionResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      VerifyTransactionResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/payment/verify/${type}`,
       method: "POST",
       body: data,
@@ -779,8 +854,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for paymentControllerVerifyProductTransaction */
   paymentControllerVerifyProductTransactionAsyncThunk = createAsyncThunk(
     "paymentControllerVerifyProductTransaction",
-    async (data: { type: VERIFY_TYPE; data: VerifyTransactionDto; params?: RequestParams }) => {
-      return await this.paymentControllerVerifyProductTransaction(data.type, data.data, data?.params);
+    async (data: {
+      type: VERIFY_TYPE;
+      data: VerifyTransactionDto;
+      params?: RequestParams;
+    }) => {
+      return await this.paymentControllerVerifyProductTransaction(
+        data.type,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -807,7 +890,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<VerifyTransactionResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      VerifyTransactionResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/payment/verify/zibal/${type}`,
       method: "GET",
       query: query,
@@ -822,10 +908,19 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     "paymentControllerVerifyZibalProductTransaction",
     async (data: {
       type: VERIFY_TYPE;
-      query: { trackId: string; success: string; orderId: string; status: number };
+      query: {
+        trackId: string;
+        success: string;
+        orderId: string;
+        status: number;
+      };
       params?: RequestParams;
     }) => {
-      return await this.paymentControllerVerifyZibalProductTransaction(data.type, data.query, data?.params);
+      return await this.paymentControllerVerifyZibalProductTransaction(
+        data.type,
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -851,7 +946,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<OrderCustomListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      OrderCustomListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/transaction/admin/${userId}`,
       method: "GET",
       query: query,
@@ -862,12 +960,21 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
 
   /**
    * Redux AsyncThunk for transactionControllerGetTrandactionListByUserIdForAdmin */
-  transactionControllerGetTrandactionListByUserIdForAdminAsyncThunk = createAsyncThunk(
-    "transactionControllerGetTrandactionListByUserIdForAdmin",
-    async (data: { userId: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.transactionControllerGetTrandactionListByUserIdForAdmin(data.userId, data?.query, data?.params);
-    },
-  );
+  transactionControllerGetTrandactionListByUserIdForAdminAsyncThunk =
+    createAsyncThunk(
+      "transactionControllerGetTrandactionListByUserIdForAdmin",
+      async (data: {
+        userId: string;
+        query?: { page?: number; limit?: number };
+        params?: RequestParams;
+      }) => {
+        return await this.transactionControllerGetTrandactionListByUserIdForAdmin(
+          data.userId,
+          data?.query,
+          data?.params,
+        );
+      },
+    );
 
   /**
    * No description
@@ -906,7 +1013,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetTransactionResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetTransactionResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/transaction/client`,
       method: "GET",
       query: query,
@@ -932,7 +1042,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.transactionControllerGetListClient(data?.query, data?.params);
+      return await this.transactionControllerGetListClient(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -945,7 +1058,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/transaction/client/{transaction_id}
    * @secure
    */
-  transactionControllerGetDetailClient = (transactionId: string, params: RequestParams = {}) =>
+  transactionControllerGetDetailClient = (
+    transactionId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetDetailTransactionResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -962,7 +1078,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   transactionControllerGetDetailClientAsyncThunk = createAsyncThunk(
     "transactionControllerGetDetailClient",
     async (data: { transactionId: string; params?: RequestParams }) => {
-      return await this.transactionControllerGetDetailClient(data.transactionId, data?.params);
+      return await this.transactionControllerGetDetailClient(
+        data.transactionId,
+        data?.params,
+      );
     },
   );
 
@@ -1003,7 +1122,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetTransactionResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetTransactionResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/transaction`,
       method: "GET",
       query: query,
@@ -1078,7 +1200,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       query?: { page?: number; limit?: number; sort?: string };
       params?: RequestParams;
     }) => {
-      return await this.transactionControllerGetListByUser(data.userId, data?.query, data?.params);
+      return await this.transactionControllerGetListByUser(
+        data.userId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -1091,7 +1217,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/transaction/{transaction_id}
    * @secure
    */
-  transactionControllerGetDetail = (transactionId: string, params: RequestParams = {}) =>
+  transactionControllerGetDetail = (
+    transactionId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetDetailTransactionResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -1108,7 +1237,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   transactionControllerGetDetailAsyncThunk = createAsyncThunk(
     "transactionControllerGetDetail",
     async (data: { transactionId: string; params?: RequestParams }) => {
-      return await this.transactionControllerGetDetail(data.transactionId, data?.params);
+      return await this.transactionControllerGetDetail(
+        data.transactionId,
+        data?.params,
+      );
     },
   );
 
@@ -1163,10 +1295,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
        * @example "created_at"
        */
       sort_field?: string;
+      /** label ids */
+      label_ids?: string[];
     },
     params: RequestParams = {},
   ) =>
-    this.request<OrderSearchResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      OrderSearchResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/admin/search/list`,
       method: "GET",
       query: query,
@@ -1195,10 +1332,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
         end_date?: string;
         sort?: PrismaSortOrder;
         sort_field?: string;
+        label_ids?: string[];
       };
       params?: RequestParams;
     }) => {
-      return await this.orderControllerAdminOrderListBySearch(data?.query, data?.params);
+      return await this.orderControllerAdminOrderListBySearch(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -1224,7 +1365,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<OrderSearchResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      OrderSearchResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/admin/list/${userId}`,
       method: "GET",
       query: query,
@@ -1237,8 +1381,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerAdminOrderListByUserId */
   orderControllerAdminOrderListByUserIdAsyncThunk = createAsyncThunk(
     "orderControllerAdminOrderListByUserId",
-    async (data: { userId: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.orderControllerAdminOrderListByUserId(data.userId, data?.query, data?.params);
+    async (data: {
+      userId: string;
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerAdminOrderListByUserId(
+        data.userId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -1251,8 +1403,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/order/admin/label/assign/{order_id}
    * @secure
    */
-  orderControllerAdminAssignLabelToOrder = (orderId: string, data: OrderLabelDto, params: RequestParams = {}) =>
-    this.request<OrderResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderControllerAdminAssignLabelToOrder = (
+    orderId: string,
+    data: OrderLabelDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      OrderResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/admin/label/assign/${orderId}`,
       method: "PATCH",
       body: data,
@@ -1266,8 +1425,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerAdminAssignLabelToOrder */
   orderControllerAdminAssignLabelToOrderAsyncThunk = createAsyncThunk(
     "orderControllerAdminAssignLabelToOrder",
-    async (data: { orderId: string; data: OrderLabelDto; params?: RequestParams }) => {
-      return await this.orderControllerAdminAssignLabelToOrder(data.orderId, data.data, data?.params);
+    async (data: {
+      orderId: string;
+      data: OrderLabelDto;
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerAdminAssignLabelToOrder(
+        data.orderId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1280,8 +1447,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/order/admin/detail/{order_id}
    * @secure
    */
-  orderControllerAdminGetOrderDetail = (orderId: string, params: RequestParams = {}) =>
-    this.request<GetOrderDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderControllerAdminGetOrderDetail = (
+    orderId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetOrderDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/admin/detail/${orderId}`,
       method: "GET",
       secure: true,
@@ -1294,7 +1467,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   orderControllerAdminGetOrderDetailAsyncThunk = createAsyncThunk(
     "orderControllerAdminGetOrderDetail",
     async (data: { orderId: string; params?: RequestParams }) => {
-      return await this.orderControllerAdminGetOrderDetail(data.orderId, data?.params);
+      return await this.orderControllerAdminGetOrderDetail(
+        data.orderId,
+        data?.params,
+      );
     },
   );
 
@@ -1307,8 +1483,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/order/admin/status/{order_id}
    * @secure
    */
-  orderControllerAdminUpdateOrderStatus = (orderId: string, data: OrderUpdateStatusDto, params: RequestParams = {}) =>
-    this.request<OrderUpdateResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderControllerAdminUpdateOrderStatus = (
+    orderId: string,
+    data: OrderUpdateStatusDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      OrderUpdateResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/admin/status/${orderId}`,
       method: "PATCH",
       body: data,
@@ -1322,8 +1505,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerAdminUpdateOrderStatus */
   orderControllerAdminUpdateOrderStatusAsyncThunk = createAsyncThunk(
     "orderControllerAdminUpdateOrderStatus",
-    async (data: { orderId: string; data: OrderUpdateStatusDto; params?: RequestParams }) => {
-      return await this.orderControllerAdminUpdateOrderStatus(data.orderId, data.data, data?.params);
+    async (data: {
+      orderId: string;
+      data: OrderUpdateStatusDto;
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerAdminUpdateOrderStatus(
+        data.orderId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1348,7 +1539,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetUserOrdersResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetUserOrdersResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/list`,
       method: "GET",
       query: query,
@@ -1361,7 +1555,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerGetUserOrders */
   orderControllerGetUserOrdersAsyncThunk = createAsyncThunk(
     "orderControllerGetUserOrders",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
       return await this.orderControllerGetUserOrders(data?.query, data?.params);
     },
   );
@@ -1376,7 +1573,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   orderControllerGetOrder = (orderId: string, params: RequestParams = {}) =>
-    this.request<GetOrderResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetOrderResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/${orderId}`,
       method: "GET",
       secure: true,
@@ -1402,8 +1602,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/order/{order_id}
    * @secure
    */
-  orderControllerCompleteOrder = (orderId: string, data: CompleteOrderDto, params: RequestParams = {}) =>
-    this.request<CompleteOrderResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderControllerCompleteOrder = (
+    orderId: string,
+    data: CompleteOrderDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CompleteOrderResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/${orderId}`,
       method: "POST",
       body: data,
@@ -1417,8 +1624,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerCompleteOrder */
   orderControllerCompleteOrderAsyncThunk = createAsyncThunk(
     "orderControllerCompleteOrder",
-    async (data: { orderId: string; data: CompleteOrderDto; params?: RequestParams }) => {
-      return await this.orderControllerCompleteOrder(data.orderId, data.data, data?.params);
+    async (data: {
+      orderId: string;
+      data: CompleteOrderDto;
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerCompleteOrder(
+        data.orderId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1451,8 +1666,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerDownloadOrder */
   orderControllerDownloadOrderAsyncThunk = createAsyncThunk(
     "orderControllerDownloadOrder",
-    async (data: { orderId: string; query: { downloadType: OrderDownloadType }; params?: RequestParams }) => {
-      return await this.orderControllerDownloadOrder(data.orderId, data.query, data?.params);
+    async (data: {
+      orderId: string;
+      query: { downloadType: OrderDownloadType };
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerDownloadOrder(
+        data.orderId,
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -1471,7 +1694,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: ClientEditAppleIdDto,
     params: RequestParams = {},
   ) =>
-    this.request<ClientEditAppleIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      ClientEditAppleIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/${orderId}/appleid/${appleId}/edit-scope`,
       method: "PATCH",
       body: data,
@@ -1485,8 +1711,18 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerAppleIdEditScope */
   orderControllerAppleIdEditScopeAsyncThunk = createAsyncThunk(
     "orderControllerAppleIdEditScope",
-    async (data: { orderId: string; appleId: string; data: ClientEditAppleIdDto; params?: RequestParams }) => {
-      return await this.orderControllerAppleIdEditScope(data.orderId, data.appleId, data.data, data?.params);
+    async (data: {
+      orderId: string;
+      appleId: string;
+      data: ClientEditAppleIdDto;
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerAppleIdEditScope(
+        data.orderId,
+        data.appleId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1499,8 +1735,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/order/follow/{order_id}
    * @secure
    */
-  orderControllerUpdateFollowUpStatus = (orderId: string, data: UpdateFollowUpOrderDto, params: RequestParams = {}) =>
-    this.request<FollowUpOrderResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderControllerUpdateFollowUpStatus = (
+    orderId: string,
+    data: UpdateFollowUpOrderDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      FollowUpOrderResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/follow/${orderId}`,
       method: "PATCH",
       body: data,
@@ -1514,8 +1757,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderControllerUpdateFollowUpStatus */
   orderControllerUpdateFollowUpStatusAsyncThunk = createAsyncThunk(
     "orderControllerUpdateFollowUpStatus",
-    async (data: { orderId: string; data: UpdateFollowUpOrderDto; params?: RequestParams }) => {
-      return await this.orderControllerUpdateFollowUpStatus(data.orderId, data.data, data?.params);
+    async (data: {
+      orderId: string;
+      data: UpdateFollowUpOrderDto;
+      params?: RequestParams;
+    }) => {
+      return await this.orderControllerUpdateFollowUpStatus(
+        data.orderId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1528,8 +1779,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/order/follow/force/close
    * @secure
    */
-  orderControllerEndFollowUpStatus = (data: ForceCloseFollowUpDto, params: RequestParams = {}) =>
-    this.request<CompleteOrderResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderControllerEndFollowUpStatus = (
+    data: ForceCloseFollowUpDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CompleteOrderResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/follow/force/close`,
       method: "POST",
       body: data,
@@ -1544,7 +1801,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   orderControllerEndFollowUpStatusAsyncThunk = createAsyncThunk(
     "orderControllerEndFollowUpStatus",
     async (data: { data: ForceCloseFollowUpDto; params?: RequestParams }) => {
-      return await this.orderControllerEndFollowUpStatus(data.data, data?.params);
+      return await this.orderControllerEndFollowUpStatus(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1570,6 +1830,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       name?: string;
       /** user id */
       user_id?: string;
+      /** status */
+      status?: LABEL_STATUS;
       /**
        * Start of creation date range
        * @format date-time
@@ -1583,7 +1845,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetLabelResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetLabelResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/label`,
       method: "GET",
       query: query,
@@ -1602,6 +1867,7 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
         limit?: number;
         name?: string;
         user_id?: string;
+        status?: LABEL_STATUS;
         created_at_start?: string;
         created_at_end?: string;
       };
@@ -1620,8 +1886,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/label
    * @secure
    */
-  labelControllerCreateLabel = (data: CreateLabelDto, params: RequestParams = {}) =>
-    this.request<CreateLabelResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  labelControllerCreateLabel = (
+    data: CreateLabelDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateLabelResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/label`,
       method: "POST",
       body: data,
@@ -1650,7 +1922,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   labelControllerGetLabel = (labelId: string, params: RequestParams = {}) =>
-    this.request<GetLabelByIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetLabelByIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/label/${labelId}`,
       method: "GET",
       secure: true,
@@ -1676,8 +1951,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/label/create/bulk
    * @secure
    */
-  labelControllerCreateBulkLabel = (data: CreateBulkLabelDto, params: RequestParams = {}) =>
-    this.request<CreateBulkLabelResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  labelControllerCreateBulkLabel = (
+    data: CreateBulkLabelDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateBulkLabelResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/label/create/bulk`,
       method: "POST",
       body: data,
@@ -1705,8 +1986,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/label/update/bulk
    * @secure
    */
-  labelControllerUpdateBulkLabel = (data: UpdateBulkLabelDto, params: RequestParams = {}) =>
-    this.request<GetLabelResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  labelControllerUpdateBulkLabel = (
+    data: UpdateBulkLabelDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetLabelResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/label/update/bulk`,
       method: "PUT",
       body: data,
@@ -1734,8 +2021,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/label/delete/bulk
    * @secure
    */
-  labelControllerDeleteBulkLabel = (data: DeleteBulkLabelDto, params: RequestParams = {}) =>
-    this.request<DeleteBulkLabelResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  labelControllerDeleteBulkLabel = (
+    data: DeleteBulkLabelDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteBulkLabelResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/label/delete/bulk`,
       method: "POST",
       body: data,
@@ -1764,7 +2057,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   noteControllerGetOneNote = (noteId: string, params: RequestParams = {}) =>
-    this.request<GetByIdNoteResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetByIdNoteResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/note/${noteId}`,
       method: "GET",
       secure: true,
@@ -1790,8 +2086,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/note
    * @secure
    */
-  noteControllerCreateNote = (data: CreateNoteDto, params: RequestParams = {}) =>
-    this.request<CreateNoteResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  noteControllerCreateNote = (
+    data: CreateNoteDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateNoteResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/note`,
       method: "POST",
       body: data,
@@ -1819,8 +2121,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/note/{noteId}
    * @secure
    */
-  noteControllerUpdateNote = (noteId: string, data: UpdateNoteDto, params: RequestParams = {}) =>
-    this.request<UpdateNoteResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  noteControllerUpdateNote = (
+    noteId: string,
+    data: UpdateNoteDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateNoteResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/note/${noteId}`,
       method: "PUT",
       body: data,
@@ -1834,8 +2143,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for noteControllerUpdateNote */
   noteControllerUpdateNoteAsyncThunk = createAsyncThunk(
     "noteControllerUpdateNote",
-    async (data: { noteId: string; data: UpdateNoteDto; params?: RequestParams }) => {
-      return await this.noteControllerUpdateNote(data.noteId, data.data, data?.params);
+    async (data: {
+      noteId: string;
+      data: UpdateNoteDto;
+      params?: RequestParams;
+    }) => {
+      return await this.noteControllerUpdateNote(
+        data.noteId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1849,7 +2166,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   noteControllerDeleteNote = (noteId: string, params: RequestParams = {}) =>
-    this.request<DeleteNoteResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteNoteResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/note/${noteId}`,
       method: "DELETE",
       secure: true,
@@ -1887,7 +2207,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetOrderStatusResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetOrderStatusResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/status`,
       method: "GET",
       query: query,
@@ -1900,8 +2223,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderStatusControllerGetStatusList */
   orderStatusControllerGetStatusListAsyncThunk = createAsyncThunk(
     "orderStatusControllerGetStatusList",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.orderStatusControllerGetStatusList(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.orderStatusControllerGetStatusList(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -1914,8 +2243,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/order/status
    * @secure
    */
-  orderStatusControllerCreateStatus = (data: CreateOrderStatusDto, params: RequestParams = {}) =>
-    this.request<CreateOrderStatusResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderStatusControllerCreateStatus = (
+    data: CreateOrderStatusDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateOrderStatusResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/status`,
       method: "POST",
       body: data,
@@ -1930,7 +2265,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   orderStatusControllerCreateStatusAsyncThunk = createAsyncThunk(
     "orderStatusControllerCreateStatus",
     async (data: { data: CreateOrderStatusDto; params?: RequestParams }) => {
-      return await this.orderStatusControllerCreateStatus(data.data, data?.params);
+      return await this.orderStatusControllerCreateStatus(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -1943,23 +2281,30 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/order/status/{status_id}
    * @secure
    */
-  orderStatusControllerGetOneStatus = (statusId: string, params: RequestParams = {}) =>
-    this.request<GetByIdOrderStatusResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/order/status/${statusId}`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+  orderStatusControllerGetOneStatus = (
+    statusId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetByIdOrderStatusResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/order/status/${statusId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for orderStatusControllerGetOneStatus */
   orderStatusControllerGetOneStatusAsyncThunk = createAsyncThunk(
     "orderStatusControllerGetOneStatus",
     async (data: { statusId: string; params?: RequestParams }) => {
-      return await this.orderStatusControllerGetOneStatus(data.statusId, data?.params);
+      return await this.orderStatusControllerGetOneStatus(
+        data.statusId,
+        data?.params,
+      );
     },
   );
 
@@ -1972,8 +2317,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/order/status/{status_id}
    * @secure
    */
-  orderStatusControllerUpdateStatus = (statusId: string, data: UpdateOrderStatusDto, params: RequestParams = {}) =>
-    this.request<UpdateOrderStatusResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderStatusControllerUpdateStatus = (
+    statusId: string,
+    data: UpdateOrderStatusDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateOrderStatusResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/status/${statusId}`,
       method: "PUT",
       body: data,
@@ -1987,8 +2339,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for orderStatusControllerUpdateStatus */
   orderStatusControllerUpdateStatusAsyncThunk = createAsyncThunk(
     "orderStatusControllerUpdateStatus",
-    async (data: { statusId: string; data: UpdateOrderStatusDto; params?: RequestParams }) => {
-      return await this.orderStatusControllerUpdateStatus(data.statusId, data.data, data?.params);
+    async (data: {
+      statusId: string;
+      data: UpdateOrderStatusDto;
+      params?: RequestParams;
+    }) => {
+      return await this.orderStatusControllerUpdateStatus(
+        data.statusId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -2001,8 +2361,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/order/status/{status_id}
    * @secure
    */
-  orderStatusControllerDeleteStatus = (statusId: string, params: RequestParams = {}) =>
-    this.request<DeleteOrderStatusResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  orderStatusControllerDeleteStatus = (
+    statusId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteOrderStatusResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/order/status/${statusId}`,
       method: "DELETE",
       secure: true,
@@ -2015,7 +2381,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   orderStatusControllerDeleteStatusAsyncThunk = createAsyncThunk(
     "orderStatusControllerDeleteStatus",
     async (data: { statusId: string; params?: RequestParams }) => {
-      return await this.orderStatusControllerDeleteStatus(data.statusId, data?.params);
+      return await this.orderStatusControllerDeleteStatus(
+        data.statusId,
+        data?.params,
+      );
     },
   );
 
@@ -2121,8 +2490,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/timer/{timer_id}
    * @secure
    */
-  timerControllerTimerLogDetail = (timerId: string, params: RequestParams = {}) =>
-    this.request<TimerTrackerResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  timerControllerTimerLogDetail = (
+    timerId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      TimerTrackerResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/timer/${timerId}`,
       method: "GET",
       secure: true,
@@ -2135,7 +2510,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   timerControllerTimerLogDetailAsyncThunk = createAsyncThunk(
     "timerControllerTimerLogDetail",
     async (data: { timerId: string; params?: RequestParams }) => {
-      return await this.timerControllerTimerLogDetail(data.timerId, data?.params);
+      return await this.timerControllerTimerLogDetail(
+        data.timerId,
+        data?.params,
+      );
     },
   );
 
@@ -2209,10 +2587,17 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   timerRequestControllerGetTimerListAsyncThunk = createAsyncThunk(
     "timerRequestControllerGetTimerList",
     async (data?: {
-      query?: { page?: number; limit?: number; status?: TIMER_MANAGMENT_STATUS };
+      query?: {
+        page?: number;
+        limit?: number;
+        status?: TIMER_MANAGMENT_STATUS;
+      };
       params?: RequestParams;
     }) => {
-      return await this.timerRequestControllerGetTimerList(data?.query, data?.params);
+      return await this.timerRequestControllerGetTimerList(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -2225,8 +2610,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/timer-request
    * @secure
    */
-  timerRequestControllerSetTimerRequest = (data: SetTimerRequestDto, params: RequestParams = {}) =>
-    this.request<SetTimerRequestResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  timerRequestControllerSetTimerRequest = (
+    data: SetTimerRequestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SetTimerRequestResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/timer-request`,
       method: "POST",
       body: data,
@@ -2241,7 +2632,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   timerRequestControllerSetTimerRequestAsyncThunk = createAsyncThunk(
     "timerRequestControllerSetTimerRequest",
     async (data: { data: SetTimerRequestDto; params?: RequestParams }) => {
-      return await this.timerRequestControllerSetTimerRequest(data.data, data?.params);
+      return await this.timerRequestControllerSetTimerRequest(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -2254,7 +2648,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/timer-request
    * @secure
    */
-  timerRequestControllerTimerRequestManagment = (data: UpdateStatusTimerRequestArrayDto, params: RequestParams = {}) =>
+  timerRequestControllerTimerRequestManagment = (
+    data: UpdateStatusTimerRequestArrayDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       UpdateTimerRequestBulkResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -2272,8 +2669,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for timerRequestControllerTimerRequestManagment */
   timerRequestControllerTimerRequestManagmentAsyncThunk = createAsyncThunk(
     "timerRequestControllerTimerRequestManagment",
-    async (data: { data: UpdateStatusTimerRequestArrayDto; params?: RequestParams }) => {
-      return await this.timerRequestControllerTimerRequestManagment(data.data, data?.params);
+    async (data: {
+      data: UpdateStatusTimerRequestArrayDto;
+      params?: RequestParams;
+    }) => {
+      return await this.timerRequestControllerTimerRequestManagment(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -2286,7 +2689,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/timer-request/{timer_request_id}
    * @secure
    */
-  timerRequestControllerGetTimerDetail = (timerRequestId: string, params: RequestParams = {}) =>
+  timerRequestControllerGetTimerDetail = (
+    timerRequestId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetTimerRequestDetailResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -2303,7 +2709,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   timerRequestControllerGetTimerDetailAsyncThunk = createAsyncThunk(
     "timerRequestControllerGetTimerDetail",
     async (data: { timerRequestId: string; params?: RequestParams }) => {
-      return await this.timerRequestControllerGetTimerDetail(data.timerRequestId, data?.params);
+      return await this.timerRequestControllerGetTimerDetail(
+        data.timerRequestId,
+        data?.params,
+      );
     },
   );
 
@@ -2342,7 +2751,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetFAQResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetFAQResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/faq`,
       method: "GET",
       query: query,
@@ -2380,7 +2792,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   faqControllerCreateFaq = (data: CreateFAQDto, params: RequestParams = {}) =>
-    this.request<CreateFAQResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      CreateFAQResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/faq`,
       method: "POST",
       body: data,
@@ -2409,7 +2824,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   faqControllerGetFaqById = (faqId: string, params: RequestParams = {}) =>
-    this.request<GetFAQByIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetFAQByIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/faq/${faqId}`,
       method: "GET",
       secure: true,
@@ -2435,8 +2853,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/faq/{faqId}
    * @secure
    */
-  faqControllerUpdateFaq = (faqId: string, data: UpdateFAQDto, params: RequestParams = {}) =>
-    this.request<UpdateFAQResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  faqControllerUpdateFaq = (
+    faqId: string,
+    data: UpdateFAQDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateFAQResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/faq/${faqId}`,
       method: "PUT",
       body: data,
@@ -2450,8 +2875,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for faqControllerUpdateFaq */
   faqControllerUpdateFaqAsyncThunk = createAsyncThunk(
     "faqControllerUpdateFaq",
-    async (data: { faqId: string; data: UpdateFAQDto; params?: RequestParams }) => {
-      return await this.faqControllerUpdateFaq(data.faqId, data.data, data?.params);
+    async (data: {
+      faqId: string;
+      data: UpdateFAQDto;
+      params?: RequestParams;
+    }) => {
+      return await this.faqControllerUpdateFaq(
+        data.faqId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -2465,7 +2898,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   faqControllerDeleteFaq = (faqId: string, params: RequestParams = {}) =>
-    this.request<DeleteFAQResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteFAQResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/faq/${faqId}`,
       method: "DELETE",
       secure: true,
@@ -2491,8 +2927,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/product
    * @secure
    */
-  productControllerCreateProduct = (data: CreateProductDto, params: RequestParams = {}) =>
-    this.request<CreateProductResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  productControllerCreateProduct = (
+    data: CreateProductDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateProductResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/product`,
       method: "POST",
       body: data,
@@ -2558,7 +3000,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetProductsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetProductsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/product`,
       method: "GET",
       query: query,
@@ -2588,7 +3033,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.productControllerGetAllProducts(data?.query, data?.params);
+      return await this.productControllerGetAllProducts(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -2601,8 +3049,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/product/{product_id}
    * @secure
    */
-  productControllerUpdateProduct = (productId: string, data: UpdateProductDto, params: RequestParams = {}) =>
-    this.request<UpdateProductResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  productControllerUpdateProduct = (
+    productId: string,
+    data: UpdateProductDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateProductResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/product/${productId}`,
       method: "PUT",
       body: data,
@@ -2616,8 +3071,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for productControllerUpdateProduct */
   productControllerUpdateProductAsyncThunk = createAsyncThunk(
     "productControllerUpdateProduct",
-    async (data: { productId: string; data: UpdateProductDto; params?: RequestParams }) => {
-      return await this.productControllerUpdateProduct(data.productId, data.data, data?.params);
+    async (data: {
+      productId: string;
+      data: UpdateProductDto;
+      params?: RequestParams;
+    }) => {
+      return await this.productControllerUpdateProduct(
+        data.productId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -2630,8 +3093,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/product/{product_id}
    * @secure
    */
-  productControllerDeleteProduct = (productId: string, params: RequestParams = {}) =>
-    this.request<DeleteProductResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  productControllerDeleteProduct = (
+    productId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteProductResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/product/${productId}`,
       method: "DELETE",
       secure: true,
@@ -2644,7 +3113,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   productControllerDeleteProductAsyncThunk = createAsyncThunk(
     "productControllerDeleteProduct",
     async (data: { productId: string; params?: RequestParams }) => {
-      return await this.productControllerDeleteProduct(data.productId, data?.params);
+      return await this.productControllerDeleteProduct(
+        data.productId,
+        data?.params,
+      );
     },
   );
 
@@ -2657,8 +3129,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/product/{product_id}
    * @secure
    */
-  productControllerGetProductById = (productId: string, params: RequestParams = {}) =>
-    this.request<GetProductByIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  productControllerGetProductById = (
+    productId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetProductByIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/product/${productId}`,
       method: "GET",
       secure: true,
@@ -2671,7 +3149,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   productControllerGetProductByIdAsyncThunk = createAsyncThunk(
     "productControllerGetProductById",
     async (data: { productId: string; params?: RequestParams }) => {
-      return await this.productControllerGetProductById(data.productId, data?.params);
+      return await this.productControllerGetProductById(
+        data.productId,
+        data?.params,
+      );
     },
   );
 
@@ -2712,8 +3193,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for productControllerGetAllProductTimers */
   productControllerGetAllProductTimersAsyncThunk = createAsyncThunk(
     "productControllerGetAllProductTimers",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.productControllerGetAllProductTimers(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.productControllerGetAllProductTimers(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -2726,8 +3213,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/product/slug/{slug}
    * @secure
    */
-  productControllerGetProductBySlug = (slug: string, params: RequestParams = {}) =>
-    this.request<GetProductByIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  productControllerGetProductBySlug = (
+    slug: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetProductByIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/product/slug/${slug}`,
       method: "GET",
       secure: true,
@@ -2740,7 +3233,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   productControllerGetProductBySlugAsyncThunk = createAsyncThunk(
     "productControllerGetProductBySlug",
     async (data: { slug: string; params?: RequestParams }) => {
-      return await this.productControllerGetProductBySlug(data.slug, data?.params);
+      return await this.productControllerGetProductBySlug(
+        data.slug,
+        data?.params,
+      );
     },
   );
 
@@ -2780,15 +3276,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   productControllerGetDeletedProducts = (params: RequestParams = {}) =>
-    this.request<GetDeletedProductsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/product/deleted`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      GetDeletedProductsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/product/deleted`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for productControllerGetDeletedProducts */
@@ -2829,29 +3326,42 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
        * @format date-time
        */
       end?: string;
+      /** Relations to include in the response */
+      expand?: ProductCategoryControllerGetCategoriesParamsExpandEnum[];
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetProductCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/product-category`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      GetProductCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/product-category`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for productCategoryControllerGetCategories */
   productCategoryControllerGetCategoriesAsyncThunk = createAsyncThunk(
     "productCategoryControllerGetCategories",
     async (data?: {
-      query?: { page?: number; limit?: number; name?: string; start?: string; end?: string };
+      query?: {
+        page?: number;
+        limit?: number;
+        name?: string;
+        start?: string;
+        end?: string;
+        expand?: ProductCategoryControllerGetCategoriesParamsExpandEnum[];
+      };
       params?: RequestParams;
     }) => {
-      return await this.productCategoryControllerGetCategories(data?.query, data?.params);
+      return await this.productCategoryControllerGetCategories(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -2864,7 +3374,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/product-category
    * @secure
    */
-  productCategoryControllerCreateProductCategory = (data: CreateProductCategoryDto, params: RequestParams = {}) =>
+  productCategoryControllerCreateProductCategory = (
+    data: CreateProductCategoryDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       CreateProductCategoryResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -2882,50 +3395,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for productCategoryControllerCreateProductCategory */
   productCategoryControllerCreateProductCategoryAsyncThunk = createAsyncThunk(
     "productCategoryControllerCreateProductCategory",
-    async (data: { data: CreateProductCategoryDto; params?: RequestParams }) => {
-      return await this.productCategoryControllerCreateProductCategory(data.data, data?.params);
-    },
-  );
-
-  /**
-   * No description
-   *
-   * @tags Product Category
-   * @name ProductCategoryControllerGetCategoryList
-   * @summary Get Product Categories List
-   * @request GET:/api/v1/product-category/list
-   * @secure
-   */
-  productCategoryControllerGetCategoryList = (
-    query?: {
-      /**
-       * Page number
-       * @default 1
-       */
-      page?: number;
-      /** Number of items per page */
-      limit?: number;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<
-      GetProductCategoryListResponseDto,
-      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
-    >({
-      path: `/api/v1/product-category/list`,
-      method: "GET",
-      query: query,
-      secure: true,
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * Redux AsyncThunk for productCategoryControllerGetCategoryList */
-  productCategoryControllerGetCategoryListAsyncThunk = createAsyncThunk(
-    "productCategoryControllerGetCategoryList",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.productCategoryControllerGetCategoryList(data?.query, data?.params);
+    async (data: {
+      data: CreateProductCategoryDto;
+      params?: RequestParams;
+    }) => {
+      return await this.productCategoryControllerCreateProductCategory(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -2938,7 +3415,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/product-category/{product_category_id}
    * @secure
    */
-  productCategoryControllerGetProductCategoryById = (productCategoryId: string, params: RequestParams = {}) =>
+  productCategoryControllerGetProductCategoryById = (
+    productCategoryId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetOneProductCategoryResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -2955,7 +3435,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   productCategoryControllerGetProductCategoryByIdAsyncThunk = createAsyncThunk(
     "productCategoryControllerGetProductCategoryById",
     async (data: { productCategoryId: string; params?: RequestParams }) => {
-      return await this.productCategoryControllerGetProductCategoryById(data.productCategoryId, data?.params);
+      return await this.productCategoryControllerGetProductCategoryById(
+        data.productCategoryId,
+        data?.params,
+      );
     },
   );
 
@@ -2990,8 +3473,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for productCategoryControllerUpdateProductCategory */
   productCategoryControllerUpdateProductCategoryAsyncThunk = createAsyncThunk(
     "productCategoryControllerUpdateProductCategory",
-    async (data: { productCategoryId: string; data: UpdateProductCategoryDto; params?: RequestParams }) => {
-      return await this.productCategoryControllerUpdateProductCategory(data.productCategoryId, data.data, data?.params);
+    async (data: {
+      productCategoryId: string;
+      data: UpdateProductCategoryDto;
+      params?: RequestParams;
+    }) => {
+      return await this.productCategoryControllerUpdateProductCategory(
+        data.productCategoryId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3004,7 +3495,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/product-category/{product_category_id}
    * @secure
    */
-  productCategoryControllerDeleteProductCategory = (productCategoryId: string, params: RequestParams = {}) =>
+  productCategoryControllerDeleteProductCategory = (
+    productCategoryId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       DeleteProductCategoryResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -3021,7 +3515,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   productCategoryControllerDeleteProductCategoryAsyncThunk = createAsyncThunk(
     "productCategoryControllerDeleteProductCategory",
     async (data: { productCategoryId: string; params?: RequestParams }) => {
-      return await this.productCategoryControllerDeleteProductCategory(data.productCategoryId, data?.params);
+      return await this.productCategoryControllerDeleteProductCategory(
+        data.productCategoryId,
+        data?.params,
+      );
     },
   );
 
@@ -3046,23 +3543,30 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetListEmailDomainResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/email-domain`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      GetListEmailDomainResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/email-domain`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for emailDomainControllerGetEmailDomainList */
   emailDomainControllerGetEmailDomainListAsyncThunk = createAsyncThunk(
     "emailDomainControllerGetEmailDomainList",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.emailDomainControllerGetEmailDomainList(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.emailDomainControllerGetEmailDomainList(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -3075,8 +3579,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/email-domain
    * @secure
    */
-  emailDomainControllerCreateEmailDomain = (data: CreateEmailDomainDto, params: RequestParams = {}) =>
-    this.request<CreateEmailDomainResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  emailDomainControllerCreateEmailDomain = (
+    data: CreateEmailDomainDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateEmailDomainResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/email-domain`,
       method: "POST",
       body: data,
@@ -3091,7 +3601,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   emailDomainControllerCreateEmailDomainAsyncThunk = createAsyncThunk(
     "emailDomainControllerCreateEmailDomain",
     async (data: { data: CreateEmailDomainDto; params?: RequestParams }) => {
-      return await this.emailDomainControllerCreateEmailDomain(data.data, data?.params);
+      return await this.emailDomainControllerCreateEmailDomain(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3104,7 +3617,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/email-domain/{email_domain_id}
    * @secure
    */
-  emailDomainControllerGetEmailDomainById = (emailDomainId: string, params: RequestParams = {}) =>
+  emailDomainControllerGetEmailDomainById = (
+    emailDomainId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetDetailEmailDomainResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -3121,7 +3637,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   emailDomainControllerGetEmailDomainByIdAsyncThunk = createAsyncThunk(
     "emailDomainControllerGetEmailDomainById",
     async (data: { emailDomainId: string; params?: RequestParams }) => {
-      return await this.emailDomainControllerGetEmailDomainById(data.emailDomainId, data?.params);
+      return await this.emailDomainControllerGetEmailDomainById(
+        data.emailDomainId,
+        data?.params,
+      );
     },
   );
 
@@ -3139,7 +3658,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: UpdateBodyEmailDomainDto,
     params: RequestParams = {},
   ) =>
-    this.request<UpdateEmailDomainResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      UpdateEmailDomainResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/email-domain/${emailDomainId}`,
       method: "PUT",
       body: data,
@@ -3153,8 +3675,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for emailDomainControllerUpdateEmailDomain */
   emailDomainControllerUpdateEmailDomainAsyncThunk = createAsyncThunk(
     "emailDomainControllerUpdateEmailDomain",
-    async (data: { emailDomainId: string; data: UpdateBodyEmailDomainDto; params?: RequestParams }) => {
-      return await this.emailDomainControllerUpdateEmailDomain(data.emailDomainId, data.data, data?.params);
+    async (data: {
+      emailDomainId: string;
+      data: UpdateBodyEmailDomainDto;
+      params?: RequestParams;
+    }) => {
+      return await this.emailDomainControllerUpdateEmailDomain(
+        data.emailDomainId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3167,8 +3697,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/email-domain/{email_domain_id}
    * @secure
    */
-  emailDomainControllerDeleteEmailDomain = (emailDomainId: string, params: RequestParams = {}) =>
-    this.request<DeleteEmailDomainResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  emailDomainControllerDeleteEmailDomain = (
+    emailDomainId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteEmailDomainResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/email-domain/${emailDomainId}`,
       method: "DELETE",
       secure: true,
@@ -3181,7 +3717,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   emailDomainControllerDeleteEmailDomainAsyncThunk = createAsyncThunk(
     "emailDomainControllerDeleteEmailDomain",
     async (data: { emailDomainId: string; params?: RequestParams }) => {
-      return await this.emailDomainControllerDeleteEmailDomain(data.emailDomainId, data?.params);
+      return await this.emailDomainControllerDeleteEmailDomain(
+        data.emailDomainId,
+        data?.params,
+      );
     },
   );
 
@@ -3194,8 +3733,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/appleid/excel
    * @secure
    */
-  appleIdControllerCreateAppleIdWithFile = (data: CreateAppleIdByFileDto, params: RequestParams = {}) =>
-    this.request<AppleIDResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdControllerCreateAppleIdWithFile = (
+    data: CreateAppleIdByFileDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      AppleIDResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/excel`,
       method: "POST",
       body: data,
@@ -3210,7 +3755,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appleIdControllerCreateAppleIdWithFileAsyncThunk = createAsyncThunk(
     "appleIdControllerCreateAppleIdWithFile",
     async (data: { data: CreateAppleIdByFileDto; params?: RequestParams }) => {
-      return await this.appleIdControllerCreateAppleIdWithFile(data.data, data?.params);
+      return await this.appleIdControllerCreateAppleIdWithFile(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3223,8 +3771,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/appleid
    * @secure
    */
-  appleIdControllerCreateAppleId = (data: CreateAppleIdsDto, params: RequestParams = {}) =>
-    this.request<CreateAppleIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdControllerCreateAppleId = (
+    data: CreateAppleIdsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateAppleIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid`,
       method: "POST",
       body: data,
@@ -3281,7 +3835,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetAppleIDsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetAppleIDsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/list`,
       method: "GET",
       query: query,
@@ -3307,7 +3864,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.appleIdControllerGetAdminAppleIds(data?.query, data?.params);
+      return await this.appleIdControllerGetAdminAppleIds(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -3320,8 +3880,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/appleid/{apple_id}
    * @secure
    */
-  appleIdControllerUpdateAppleId = (appleId: string, data: UpdateAppleIdWithStateDto, params: RequestParams = {}) =>
-    this.request<UpdateAppleIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdControllerUpdateAppleId = (
+    appleId: string,
+    data: UpdateAppleIdWithStateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateAppleIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/${appleId}`,
       method: "PATCH",
       body: data,
@@ -3335,8 +3902,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for appleIdControllerUpdateAppleId */
   appleIdControllerUpdateAppleIdAsyncThunk = createAsyncThunk(
     "appleIdControllerUpdateAppleId",
-    async (data: { appleId: string; data: UpdateAppleIdWithStateDto; params?: RequestParams }) => {
-      return await this.appleIdControllerUpdateAppleId(data.appleId, data.data, data?.params);
+    async (data: {
+      appleId: string;
+      data: UpdateAppleIdWithStateDto;
+      params?: RequestParams;
+    }) => {
+      return await this.appleIdControllerUpdateAppleId(
+        data.appleId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3349,8 +3924,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/appleid/{apple_id}
    * @secure
    */
-  appleIdControllerDeleteAppleId = (appleId: string, params: RequestParams = {}) =>
-    this.request<DeleteAppleIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdControllerDeleteAppleId = (
+    appleId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteAppleIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/${appleId}`,
       method: "DELETE",
       secure: true,
@@ -3363,7 +3944,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appleIdControllerDeleteAppleIdAsyncThunk = createAsyncThunk(
     "appleIdControllerDeleteAppleId",
     async (data: { appleId: string; params?: RequestParams }) => {
-      return await this.appleIdControllerDeleteAppleId(data.appleId, data?.params);
+      return await this.appleIdControllerDeleteAppleId(
+        data.appleId,
+        data?.params,
+      );
     },
   );
 
@@ -3416,7 +4000,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<AppleIdListLogsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      AppleIdListLogsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/logs`,
       method: "GET",
       query: query,
@@ -3444,7 +4031,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.appleIdControllerGetAppleIdLogsListForAdmin(data?.query, data?.params);
+      return await this.appleIdControllerGetAppleIdLogsListForAdmin(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -3498,7 +4088,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetAppleIDsLogsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetAppleIDsLogsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/logs/${appleId}`,
       method: "GET",
       query: query,
@@ -3527,7 +4120,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.appleIdControllerGetAppleIdLogsByAppleIdForAdmin(data.appleId, data?.query, data?.params);
+      return await this.appleIdControllerGetAppleIdLogsByAppleIdForAdmin(
+        data.appleId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -3540,8 +4137,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/appleid/detail/{apple_id}
    * @secure
    */
-  appleIdControllerGetAppleIdDetail = (appleId: string, params: RequestParams = {}) =>
-    this.request<AppleIdGetDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdControllerGetAppleIdDetail = (
+    appleId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      AppleIdGetDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/detail/${appleId}`,
       method: "GET",
       secure: true,
@@ -3554,7 +4157,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appleIdControllerGetAppleIdDetailAsyncThunk = createAsyncThunk(
     "appleIdControllerGetAppleIdDetail",
     async (data: { appleId: string; params?: RequestParams }) => {
-      return await this.appleIdControllerGetAppleIdDetail(data.appleId, data?.params);
+      return await this.appleIdControllerGetAppleIdDetail(
+        data.appleId,
+        data?.params,
+      );
     },
   );
 
@@ -3568,7 +4174,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   appleIdControllerGetDeletedAppleids = (params: RequestParams = {}) =>
-    this.request<GetAppleIDsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetAppleIDsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/appleid/deleted`,
       method: "GET",
       secure: true,
@@ -3622,7 +4231,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<SecurityQuestionsDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      SecurityQuestionsDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/security-questions`,
       method: "GET",
       query: query,
@@ -3647,7 +4259,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.questionControllerGetQuestion(data?.query, data?.params);
+      return await this.questionControllerGetQuestion(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -3660,8 +4275,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/security-questions
    * @secure
    */
-  questionControllerCreateQuestion = (data: QuestionCreateDto, params: RequestParams = {}) =>
-    this.request<SecurityQuestionsDetailDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  questionControllerCreateQuestion = (
+    data: QuestionCreateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SecurityQuestionsDetailDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/security-questions`,
       method: "POST",
       body: data,
@@ -3676,7 +4297,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   questionControllerCreateQuestionAsyncThunk = createAsyncThunk(
     "questionControllerCreateQuestion",
     async (data: { data: QuestionCreateDto; params?: RequestParams }) => {
-      return await this.questionControllerCreateQuestion(data.data, data?.params);
+      return await this.questionControllerCreateQuestion(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3689,8 +4313,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/security-questions/{question_id}
    * @secure
    */
-  questionControllerGetOneQuestion = (questionId: string, params: RequestParams = {}) =>
-    this.request<SecurityQuestionsDetailDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  questionControllerGetOneQuestion = (
+    questionId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SecurityQuestionsDetailDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/security-questions/${questionId}`,
       method: "GET",
       secure: true,
@@ -3703,7 +4333,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   questionControllerGetOneQuestionAsyncThunk = createAsyncThunk(
     "questionControllerGetOneQuestion",
     async (data: { questionId: string; params?: RequestParams }) => {
-      return await this.questionControllerGetOneQuestion(data.questionId, data?.params);
+      return await this.questionControllerGetOneQuestion(
+        data.questionId,
+        data?.params,
+      );
     },
   );
 
@@ -3716,8 +4349,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/security-questions/{question_id}
    * @secure
    */
-  questionControllerUpdateQuestion = (questionId: string, data: QuestionUpdateDto, params: RequestParams = {}) =>
-    this.request<SecurityQuestionsDetailDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  questionControllerUpdateQuestion = (
+    questionId: string,
+    data: QuestionUpdateDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SecurityQuestionsDetailDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/security-questions/${questionId}`,
       method: "PUT",
       body: data,
@@ -3731,8 +4371,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for questionControllerUpdateQuestion */
   questionControllerUpdateQuestionAsyncThunk = createAsyncThunk(
     "questionControllerUpdateQuestion",
-    async (data: { questionId: string; data: QuestionUpdateDto; params?: RequestParams }) => {
-      return await this.questionControllerUpdateQuestion(data.questionId, data.data, data?.params);
+    async (data: {
+      questionId: string;
+      data: QuestionUpdateDto;
+      params?: RequestParams;
+    }) => {
+      return await this.questionControllerUpdateQuestion(
+        data.questionId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3745,8 +4393,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/security-questions/{question_id}
    * @secure
    */
-  questionControllerDeleteQuestion = (questionId: string, params: RequestParams = {}) =>
-    this.request<SecurityQuestionsDetailDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  questionControllerDeleteQuestion = (
+    questionId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SecurityQuestionsDetailDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/security-questions/${questionId}`,
       method: "DELETE",
       secure: true,
@@ -3759,7 +4413,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   questionControllerDeleteQuestionAsyncThunk = createAsyncThunk(
     "questionControllerDeleteQuestion",
     async (data: { questionId: string; params?: RequestParams }) => {
-      return await this.questionControllerDeleteQuestion(data.questionId, data?.params);
+      return await this.questionControllerDeleteQuestion(
+        data.questionId,
+        data?.params,
+      );
     },
   );
 
@@ -3772,7 +4429,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/scraper/validate/email
    * @secure
    */
-  appleIdScraperControllerValidateEmailByScraper = (data: EmailValidationScraperDto, params: RequestParams = {}) =>
+  appleIdScraperControllerValidateEmailByScraper = (
+    data: EmailValidationScraperDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       ScraperValidateEmailResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -3790,8 +4450,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for appleIdScraperControllerValidateEmailByScraper */
   appleIdScraperControllerValidateEmailByScraperAsyncThunk = createAsyncThunk(
     "appleIdScraperControllerValidateEmailByScraper",
-    async (data: { data: EmailValidationScraperDto; params?: RequestParams }) => {
-      return await this.appleIdScraperControllerValidateEmailByScraper(data.data, data?.params);
+    async (data: {
+      data: EmailValidationScraperDto;
+      params?: RequestParams;
+    }) => {
+      return await this.appleIdScraperControllerValidateEmailByScraper(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3804,9 +4470,12 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/scraper/status/{order_id}
    * @secure
    */
-  appleIdScraperControllerGetScraperStatus = (orderId: string, params: RequestParams = {}) =>
+  appleIdScraperControllerGetScraperStatus = (
+    orderId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
-      ScraperValidateEmailResponseDto,
+      GetStatusScraperListResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
     >({
       path: `/api/v1/scraper/status/${orderId}`,
@@ -3821,7 +4490,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appleIdScraperControllerGetScraperStatusAsyncThunk = createAsyncThunk(
     "appleIdScraperControllerGetScraperStatus",
     async (data: { orderId: string; params?: RequestParams }) => {
-      return await this.appleIdScraperControllerGetScraperStatus(data.orderId, data?.params);
+      return await this.appleIdScraperControllerGetScraperStatus(
+        data.orderId,
+        data?.params,
+      );
     },
   );
 
@@ -3834,8 +4506,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/scraper/update/appleid
    * @secure
    */
-  appleIdScraperControllerUpdateAppleIdByScraper = (data: StartScraperInputsDto, params: RequestParams = {}) =>
-    this.request<ScraperUserIdsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdScraperControllerUpdateAppleIdByScraper = (
+    data: StartScraperInputsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperUserIdsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/scraper/update/appleid`,
       method: "POST",
       body: data,
@@ -3850,7 +4528,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   appleIdScraperControllerUpdateAppleIdByScraperAsyncThunk = createAsyncThunk(
     "appleIdScraperControllerUpdateAppleIdByScraper",
     async (data: { data: StartScraperInputsDto; params?: RequestParams }) => {
-      return await this.appleIdScraperControllerUpdateAppleIdByScraper(data.data, data?.params);
+      return await this.appleIdScraperControllerUpdateAppleIdByScraper(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3863,8 +4544,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/scraper/update/appleid/email
    * @secure
    */
-  appleIdScraperControllerUpdateEmailAppleIdByScraper = (data: EmailEditScraperDto, params: RequestParams = {}) =>
-    this.request<ScraperUserIdsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdScraperControllerUpdateEmailAppleIdByScraper = (
+    data: EmailEditScraperDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperUserIdsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/scraper/update/appleid/email`,
       method: "POST",
       body: data,
@@ -3876,12 +4563,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
 
   /**
    * Redux AsyncThunk for appleIdScraperControllerUpdateEmailAppleIdByScraper */
-  appleIdScraperControllerUpdateEmailAppleIdByScraperAsyncThunk = createAsyncThunk(
-    "appleIdScraperControllerUpdateEmailAppleIdByScraper",
-    async (data: { data: EmailEditScraperDto; params?: RequestParams }) => {
-      return await this.appleIdScraperControllerUpdateEmailAppleIdByScraper(data.data, data?.params);
-    },
-  );
+  appleIdScraperControllerUpdateEmailAppleIdByScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdScraperControllerUpdateEmailAppleIdByScraper",
+      async (data: { data: EmailEditScraperDto; params?: RequestParams }) => {
+        return await this.appleIdScraperControllerUpdateEmailAppleIdByScraper(
+          data.data,
+          data?.params,
+        );
+      },
+    );
 
   /**
    * No description
@@ -3892,8 +4583,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/scraper/retry/update/appleid
    * @secure
    */
-  appleIdScraperControllerRetryUpdateAppleIdByScraper = (data: RetryScraperParamDto, params: RequestParams = {}) =>
-    this.request<ScraperUserIdResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  appleIdScraperControllerRetryUpdateAppleIdByScraper = (
+    data: RetryScraperParamDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperUserIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/scraper/retry/update/appleid`,
       method: "POST",
       body: data,
@@ -3905,12 +4602,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
 
   /**
    * Redux AsyncThunk for appleIdScraperControllerRetryUpdateAppleIdByScraper */
-  appleIdScraperControllerRetryUpdateAppleIdByScraperAsyncThunk = createAsyncThunk(
-    "appleIdScraperControllerRetryUpdateAppleIdByScraper",
-    async (data: { data: RetryScraperParamDto; params?: RequestParams }) => {
-      return await this.appleIdScraperControllerRetryUpdateAppleIdByScraper(data.data, data?.params);
-    },
-  );
+  appleIdScraperControllerRetryUpdateAppleIdByScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdScraperControllerRetryUpdateAppleIdByScraper",
+      async (data: { data: RetryScraperParamDto; params?: RequestParams }) => {
+        return await this.appleIdScraperControllerRetryUpdateAppleIdByScraper(
+          data.data,
+          data?.params,
+        );
+      },
+    );
 
   /**
    * No description
@@ -3921,25 +4622,311 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/scraper/push/code
    * @secure
    */
-  appleIdScraperControllerPushCodeScraper = (data: PublishCodeScraperDto, params: RequestParams = {}) =>
-    this.request<PublishCodeScraperResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/scraper/push/code`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      },
-    );
+  appleIdScraperControllerPushCodeScraper = (
+    data: PublishCodeScraperDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      PublishCodeScraperResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/push/code`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for appleIdScraperControllerPushCodeScraper */
   appleIdScraperControllerPushCodeScraperAsyncThunk = createAsyncThunk(
     "appleIdScraperControllerPushCodeScraper",
     async (data: { data: PublishCodeScraperDto; params?: RequestParams }) => {
-      return await this.appleIdScraperControllerPushCodeScraper(data.data, data?.params);
+      return await this.appleIdScraperControllerPushCodeScraper(
+        data.data,
+        data?.params,
+      );
+    },
+  );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerGetAccountDetailScraper
+   * @summary get account detail
+   * @request GET:/api/v1/scraper/admin/detail
+   * @secure
+   */
+  appleIdAdminScraperControllerGetAccountDetailScraper = (
+    query: {
+      /** order id */
+      order_id: string;
+      /** appleid */
+      apple_id: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetDetailAccountScraperResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/detail`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerGetAccountDetailScraper */
+  appleIdAdminScraperControllerGetAccountDetailScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdAdminScraperControllerGetAccountDetailScraper",
+      async (data: {
+        query: { order_id: string; apple_id: string };
+        params?: RequestParams;
+      }) => {
+        return await this.appleIdAdminScraperControllerGetAccountDetailScraper(
+          data.query,
+          data?.params,
+        );
+      },
+    );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerValidateEmailByScraper
+   * @summary validate email appleid
+   * @request POST:/api/v1/scraper/admin/validate/email
+   * @secure
+   */
+  appleIdAdminScraperControllerValidateEmailByScraper = (
+    data: EmailValidationScraperDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperValidateEmailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/validate/email`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerValidateEmailByScraper */
+  appleIdAdminScraperControllerValidateEmailByScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdAdminScraperControllerValidateEmailByScraper",
+      async (data: {
+        data: EmailValidationScraperDto;
+        params?: RequestParams;
+      }) => {
+        return await this.appleIdAdminScraperControllerValidateEmailByScraper(
+          data.data,
+          data?.params,
+        );
+      },
+    );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerGetScraperStatus
+   * @summary get scraper status by order
+   * @request GET:/api/v1/scraper/admin/status/{order_id}
+   * @secure
+   */
+  appleIdAdminScraperControllerGetScraperStatus = (
+    orderId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetStatusScraperListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/status/${orderId}`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerGetScraperStatus */
+  appleIdAdminScraperControllerGetScraperStatusAsyncThunk = createAsyncThunk(
+    "appleIdAdminScraperControllerGetScraperStatus",
+    async (data: { orderId: string; params?: RequestParams }) => {
+      return await this.appleIdAdminScraperControllerGetScraperStatus(
+        data.orderId,
+        data?.params,
+      );
+    },
+  );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerUpdateAppleIdByScraper
+   * @summary update appleid
+   * @request POST:/api/v1/scraper/admin/update/appleid
+   * @secure
+   */
+  appleIdAdminScraperControllerUpdateAppleIdByScraper = (
+    data: StartScraperInputsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperUserIdsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/update/appleid`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerUpdateAppleIdByScraper */
+  appleIdAdminScraperControllerUpdateAppleIdByScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdAdminScraperControllerUpdateAppleIdByScraper",
+      async (data: { data: StartScraperInputsDto; params?: RequestParams }) => {
+        return await this.appleIdAdminScraperControllerUpdateAppleIdByScraper(
+          data.data,
+          data?.params,
+        );
+      },
+    );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerUpdateEmailAppleIdByScraper
+   * @summary update appleid email
+   * @request POST:/api/v1/scraper/admin/update/appleid/email
+   * @secure
+   */
+  appleIdAdminScraperControllerUpdateEmailAppleIdByScraper = (
+    data: EmailEditScraperDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperUserIdsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/update/appleid/email`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerUpdateEmailAppleIdByScraper */
+  appleIdAdminScraperControllerUpdateEmailAppleIdByScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdAdminScraperControllerUpdateEmailAppleIdByScraper",
+      async (data: { data: EmailEditScraperDto; params?: RequestParams }) => {
+        return await this.appleIdAdminScraperControllerUpdateEmailAppleIdByScraper(
+          data.data,
+          data?.params,
+        );
+      },
+    );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerRetryUpdateAppleIdByScraper
+   * @summary retry update appleid
+   * @request POST:/api/v1/scraper/admin/retry/update/appleid
+   * @secure
+   */
+  appleIdAdminScraperControllerRetryUpdateAppleIdByScraper = (
+    data: RetryScraperParamDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ScraperUserIdResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/retry/update/appleid`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerRetryUpdateAppleIdByScraper */
+  appleIdAdminScraperControllerRetryUpdateAppleIdByScraperAsyncThunk =
+    createAsyncThunk(
+      "appleIdAdminScraperControllerRetryUpdateAppleIdByScraper",
+      async (data: { data: RetryScraperParamDto; params?: RequestParams }) => {
+        return await this.appleIdAdminScraperControllerRetryUpdateAppleIdByScraper(
+          data.data,
+          data?.params,
+        );
+      },
+    );
+
+  /**
+   * No description
+   *
+   * @tags Scraper Admin
+   * @name AppleIdAdminScraperControllerPushCodeScraper
+   * @summary scraper push code
+   * @request POST:/api/v1/scraper/admin/push/code
+   * @secure
+   */
+  appleIdAdminScraperControllerPushCodeScraper = (
+    data: PublishCodeScraperDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      PublishCodeScraperResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/scraper/admin/push/code`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for appleIdAdminScraperControllerPushCodeScraper */
+  appleIdAdminScraperControllerPushCodeScraperAsyncThunk = createAsyncThunk(
+    "appleIdAdminScraperControllerPushCodeScraper",
+    async (data: { data: PublishCodeScraperDto; params?: RequestParams }) => {
+      return await this.appleIdAdminScraperControllerPushCodeScraper(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -3953,7 +4940,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   walletControllerGetBalance = (params: RequestParams = {}) =>
-    this.request<GetResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/balance`,
       method: "GET",
       secure: true,
@@ -3986,7 +4976,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/admin/balance`,
       method: "GET",
       query: query,
@@ -4000,7 +4993,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   walletControllerAdminGetBalanceAsyncThunk = createAsyncThunk(
     "walletControllerAdminGetBalance",
     async (data: { query: { user_id: string }; params?: RequestParams }) => {
-      return await this.walletControllerAdminGetBalance(data.query, data?.params);
+      return await this.walletControllerAdminGetBalance(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -4026,7 +5022,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<WalletTransactionResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      WalletTransactionResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/admin/wallet/transaction/${userId}`,
       method: "GET",
       query: query,
@@ -4039,8 +5038,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for walletControllerAsync */
   walletControllerAsyncAsyncThunk = createAsyncThunk(
     "walletControllerAsync",
-    async (data: { userId: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.walletControllerAsync(data.userId, data?.query, data?.params);
+    async (data: {
+      userId: string;
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.walletControllerAsync(
+        data.userId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -4053,8 +5060,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/wallet/admin/charge
    * @secure
    */
-  walletControllerAdminChargeWallet = (data: AdminChargeWalletDto, params: RequestParams = {}) =>
-    this.request<WalletResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  walletControllerAdminChargeWallet = (
+    data: AdminChargeWalletDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      WalletResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/admin/charge`,
       method: "POST",
       body: data,
@@ -4069,7 +5082,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   walletControllerAdminChargeWalletAsyncThunk = createAsyncThunk(
     "walletControllerAdminChargeWallet",
     async (data: { data: AdminChargeWalletDto; params?: RequestParams }) => {
-      return await this.walletControllerAdminChargeWallet(data.data, data?.params);
+      return await this.walletControllerAdminChargeWallet(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4082,8 +5098,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/wallet/admin/deduct
    * @secure
    */
-  walletControllerAdminDeductWallet = (data: AdminDeducteWalletDto, params: RequestParams = {}) =>
-    this.request<WalletResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  walletControllerAdminDeductWallet = (
+    data: AdminDeducteWalletDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      WalletResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/admin/deduct`,
       method: "POST",
       body: data,
@@ -4098,7 +5120,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   walletControllerAdminDeductWalletAsyncThunk = createAsyncThunk(
     "walletControllerAdminDeductWallet",
     async (data: { data: AdminDeducteWalletDto; params?: RequestParams }) => {
-      return await this.walletControllerAdminDeductWallet(data.data, data?.params);
+      return await this.walletControllerAdminDeductWallet(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4144,7 +5169,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<WalletTransactionAdminList, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      WalletTransactionAdminList,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/admin/transaction/${userId}/list`,
       method: "GET",
       query: query,
@@ -4173,7 +5201,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.walletControllerAdminTransactionListByUserId(data.userId, data?.query, data?.params);
+      return await this.walletControllerAdminTransactionListByUserId(
+        data.userId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -4218,7 +5250,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<WalletTransactionAdminList, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      WalletTransactionAdminList,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/admin/transaction/list`,
       method: "GET",
       query: query,
@@ -4246,7 +5281,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.walletControllerAdminTransactionList(data?.query, data?.params);
+      return await this.walletControllerAdminTransactionList(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -4259,8 +5297,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/wallet/card
    * @secure
    */
-  walletControllerRegisterUserCard = (data: RegisterUserCardDto, params: RequestParams = {}) =>
-    this.request<RegisterCardShebaResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  walletControllerRegisterUserCard = (
+    data: RegisterUserCardDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      RegisterCardShebaResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/card`,
       method: "POST",
       body: data,
@@ -4275,7 +5319,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   walletControllerRegisterUserCardAsyncThunk = createAsyncThunk(
     "walletControllerRegisterUserCard",
     async (data: { data: RegisterUserCardDto; params?: RequestParams }) => {
-      return await this.walletControllerRegisterUserCard(data.data, data?.params);
+      return await this.walletControllerRegisterUserCard(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4318,8 +5365,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/wallet/charge
    * @secure
    */
-  walletControllerCreateChargingPackage = (data: CreateChargingPackageDto, params: RequestParams = {}) =>
-    this.request<ChargingPackageResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  walletControllerCreateChargingPackage = (
+    data: CreateChargingPackageDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ChargingPackageResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/charge`,
       method: "POST",
       body: data,
@@ -4333,8 +5386,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for walletControllerCreateChargingPackage */
   walletControllerCreateChargingPackageAsyncThunk = createAsyncThunk(
     "walletControllerCreateChargingPackage",
-    async (data: { data: CreateChargingPackageDto; params?: RequestParams }) => {
-      return await this.walletControllerCreateChargingPackage(data.data, data?.params);
+    async (data: {
+      data: CreateChargingPackageDto;
+      params?: RequestParams;
+    }) => {
+      return await this.walletControllerCreateChargingPackage(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4406,7 +5465,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.walletControllerListChargingPackages(data?.query, data?.params);
+      return await this.walletControllerListChargingPackages(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -4424,7 +5486,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: UpdateChargingPackageDto,
     params: RequestParams = {},
   ) =>
-    this.request<ChargingPackageResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      ChargingPackageResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/charge/${chargeId}`,
       method: "PATCH",
       body: data,
@@ -4438,8 +5503,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for walletControllerUpdateChargingPackage */
   walletControllerUpdateChargingPackageAsyncThunk = createAsyncThunk(
     "walletControllerUpdateChargingPackage",
-    async (data: { chargeId: string; data: UpdateChargingPackageDto; params?: RequestParams }) => {
-      return await this.walletControllerUpdateChargingPackage(data.chargeId, data.data, data?.params);
+    async (data: {
+      chargeId: string;
+      data: UpdateChargingPackageDto;
+      params?: RequestParams;
+    }) => {
+      return await this.walletControllerUpdateChargingPackage(
+        data.chargeId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4452,8 +5525,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/wallet/charge/{charge_id}
    * @secure
    */
-  walletControllerDeleteChargingPackage = (chargeId: string, params: RequestParams = {}) =>
-    this.request<ChargingPackageResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  walletControllerDeleteChargingPackage = (
+    chargeId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      ChargingPackageResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/wallet/charge/${chargeId}`,
       method: "DELETE",
       secure: true,
@@ -4466,7 +5545,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   walletControllerDeleteChargingPackageAsyncThunk = createAsyncThunk(
     "walletControllerDeleteChargingPackage",
     async (data: { chargeId: string; params?: RequestParams }) => {
-      return await this.walletControllerDeleteChargingPackage(data.chargeId, data?.params);
+      return await this.walletControllerDeleteChargingPackage(
+        data.chargeId,
+        data?.params,
+      );
     },
   );
 
@@ -4515,7 +5597,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetUsersListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetUsersListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user`,
       method: "GET",
       query: query,
@@ -4557,8 +5642,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/user
    * @secure
    */
-  userControllerCreateUserByAdmin = (data: CreateUserByAdminDto, params: RequestParams = {}) =>
-    this.request<CreateUserResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  userControllerCreateUserByAdmin = (
+    data: CreateUserByAdminDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateUserResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user`,
       method: "POST",
       body: data,
@@ -4573,7 +5664,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   userControllerCreateUserByAdminAsyncThunk = createAsyncThunk(
     "userControllerCreateUserByAdmin",
     async (data: { data: CreateUserByAdminDto; params?: RequestParams }) => {
-      return await this.userControllerCreateUserByAdmin(data.data, data?.params);
+      return await this.userControllerCreateUserByAdmin(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4587,7 +5681,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   userControllerGetUserDetails = (userId: string, params: RequestParams = {}) =>
-    this.request<GetUserDetailsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetUserDetailsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user/${userId}`,
       method: "GET",
       secure: true,
@@ -4613,8 +5710,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/user/{user_id}
    * @secure
    */
-  userControllerUpdateUserByAdmin = (userId: string, data: UpdateUserAdminDto, params: RequestParams = {}) =>
-    this.request<UpdateUserAdminResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  userControllerUpdateUserByAdmin = (
+    userId: string,
+    data: UpdateUserAdminDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateUserAdminResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user/${userId}`,
       method: "PATCH",
       body: data,
@@ -4628,8 +5732,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for userControllerUpdateUserByAdmin */
   userControllerUpdateUserByAdminAsyncThunk = createAsyncThunk(
     "userControllerUpdateUserByAdmin",
-    async (data: { userId: string; data: UpdateUserAdminDto; params?: RequestParams }) => {
-      return await this.userControllerUpdateUserByAdmin(data.userId, data.data, data?.params);
+    async (data: {
+      userId: string;
+      data: UpdateUserAdminDto;
+      params?: RequestParams;
+    }) => {
+      return await this.userControllerUpdateUserByAdmin(
+        data.userId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -4643,7 +5755,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   userControllerGetProfile = (params: RequestParams = {}) =>
-    this.request<GetUserProfileResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetUserProfileResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user/profile`,
       method: "GET",
       secure: true,
@@ -4669,8 +5784,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/user/edit/profile
    * @secure
    */
-  userControllerUpdateProfile = (data: UpdateProfileDto, params: RequestParams = {}) =>
-    this.request<UpdateUserAdminResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  userControllerUpdateProfile = (
+    data: UpdateProfileDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateUserAdminResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user/edit/profile`,
       method: "PATCH",
       body: data,
@@ -4699,7 +5820,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   userControllerSendOtp = (data: SendOTPDto, params: RequestParams = {}) =>
-    this.request<SendOTPResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      SendOTPResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user/edit/phone/otp`,
       method: "POST",
       body: data,
@@ -4727,8 +5851,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/user/edit/phone
    * @secure
    */
-  userControllerUpdatePhone = (data: UpdatePhoneOTPDto, params: RequestParams = {}) =>
-    this.request<UserCreatedResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  userControllerUpdatePhone = (
+    data: UpdatePhoneOTPDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UserCreatedResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/user/edit/phone`,
       method: "PATCH",
       body: data,
@@ -4772,16 +5902,17 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCommentsRelatedResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/comment/${relatedId}/${type}`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      GetCommentsRelatedResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/comment/${relatedId}/${type}`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for commentControllerGetCommentByProduct */
@@ -4793,7 +5924,12 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       query?: { page?: number; limit?: number; sort?: SortOrder };
       params?: RequestParams;
     }) => {
-      return await this.commentControllerGetCommentByProduct(data.relatedId, data.type, data?.query, data?.params);
+      return await this.commentControllerGetCommentByProduct(
+        data.relatedId,
+        data.type,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -4806,7 +5942,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/comment/admin/detail/{comment_id}
    * @secure
    */
-  commentControllerGetDetailComment = (commentId: string, params: RequestParams = {}) =>
+  commentControllerGetDetailComment = (
+    commentId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       CommentResponseWithRelationDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -4823,7 +5962,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   commentControllerGetDetailCommentAsyncThunk = createAsyncThunk(
     "commentControllerGetDetailComment",
     async (data: { commentId: string; params?: RequestParams }) => {
-      return await this.commentControllerGetDetailComment(data.commentId, data?.params);
+      return await this.commentControllerGetDetailComment(
+        data.commentId,
+        data?.params,
+      );
     },
   );
 
@@ -4850,23 +5992,30 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCommentsRelatedResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/comment/admin/pending`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      GetCommentsRelatedResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/comment/admin/pending`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for commentControllerGetPendingComments */
   commentControllerGetPendingCommentsAsyncThunk = createAsyncThunk(
     "commentControllerGetPendingComments",
-    async (data?: { query?: { page?: number; limit?: number; sort?: SortOrder }; params?: RequestParams }) => {
-      return await this.commentControllerGetPendingComments(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number; sort?: SortOrder };
+      params?: RequestParams;
+    }) => {
+      return await this.commentControllerGetPendingComments(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -4923,7 +6072,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCommentsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCommentsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment/admin/search`,
       method: "GET",
       query: query,
@@ -4984,7 +6136,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCommentsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCommentsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment/admin/comments/${userId}`,
       method: "GET",
       query: query,
@@ -5002,7 +6157,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       query?: { page?: number; limit?: number; sort?: SortOrder };
       params?: RequestParams;
     }) => {
-      return await this.commentControllerGetCommentsByUser(data.userId, data?.query, data?.params);
+      return await this.commentControllerGetCommentsByUser(
+        data.userId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5030,7 +6189,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCommentsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCommentsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment/admin/${userId}/all`,
       method: "GET",
       query: query,
@@ -5048,7 +6210,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       query?: { page?: number; limit?: number; sort?: SortOrder };
       params?: RequestParams;
     }) => {
-      return await this.commentControllerGetAllCommentsByUserId(data.userId, data?.query, data?.params);
+      return await this.commentControllerGetAllCommentsByUserId(
+        data.userId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5076,7 +6242,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCommentsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCommentsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment/admin/all/${type}`,
       method: "GET",
       query: query,
@@ -5094,7 +6263,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       query?: { page?: number; limit?: number; sort?: SortOrder };
       params?: RequestParams;
     }) => {
-      return await this.commentControllerGetAllCommentsByType(data.type, data?.query, data?.params);
+      return await this.commentControllerGetAllCommentsByType(
+        data.type,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5107,8 +6280,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/comment
    * @secure
    */
-  commentControllerCreateComment = (data: CreateCommentDto, params: RequestParams = {}) =>
-    this.request<CreateCommentResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  commentControllerCreateComment = (
+    data: CreateCommentDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateCommentResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment`,
       method: "POST",
       body: data,
@@ -5136,18 +6315,22 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/comment/reply
    * @secure
    */
-  commentControllerCreateReply = (data: CreateReplyCommentDto, params: RequestParams = {}) =>
-    this.request<CreateReplyCommentResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/comment/reply`,
-        method: "POST",
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      },
-    );
+  commentControllerCreateReply = (
+    data: CreateReplyCommentDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateReplyCommentResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/comment/reply`,
+      method: "POST",
+      body: data,
+      secure: true,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for commentControllerCreateReply */
@@ -5172,7 +6355,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: UpdateCommentStatusBodyDto,
     params: RequestParams = {},
   ) =>
-    this.request<UpdateCommentResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      UpdateCommentResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment/${commentId}`,
       method: "PATCH",
       body: data,
@@ -5186,8 +6372,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for commentControllerUpdateCommentStatus */
   commentControllerUpdateCommentStatusAsyncThunk = createAsyncThunk(
     "commentControllerUpdateCommentStatus",
-    async (data: { commentId: string; data: UpdateCommentStatusBodyDto; params?: RequestParams }) => {
-      return await this.commentControllerUpdateCommentStatus(data.commentId, data.data, data?.params);
+    async (data: {
+      commentId: string;
+      data: UpdateCommentStatusBodyDto;
+      params?: RequestParams;
+    }) => {
+      return await this.commentControllerUpdateCommentStatus(
+        data.commentId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -5200,8 +6394,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/comment/{comment_id}
    * @secure
    */
-  commentControllerDeleteCommentStatus = (commentId: string, params: RequestParams = {}) =>
-    this.request<UpdateCommentResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  commentControllerDeleteCommentStatus = (
+    commentId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateCommentResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/comment/${commentId}`,
       method: "DELETE",
       secure: true,
@@ -5214,7 +6414,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   commentControllerDeleteCommentStatusAsyncThunk = createAsyncThunk(
     "commentControllerDeleteCommentStatus",
     async (data: { commentId: string; params?: RequestParams }) => {
-      return await this.commentControllerDeleteCommentStatus(data.commentId, data?.params);
+      return await this.commentControllerDeleteCommentStatus(
+        data.commentId,
+        data?.params,
+      );
     },
   );
 
@@ -5257,7 +6460,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category`,
       method: "GET",
       query: query,
@@ -5283,7 +6489,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.categoryControllerGetCategories(data?.query, data?.params);
+      return await this.categoryControllerGetCategories(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5296,8 +6505,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/category
    * @secure
    */
-  categoryControllerCreateCategory = (data: CreateCategoryDto, params: RequestParams = {}) =>
-    this.request<CreateCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  categoryControllerCreateCategory = (
+    data: CreateCategoryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category`,
       method: "POST",
       body: data,
@@ -5312,7 +6527,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoryControllerCreateCategoryAsyncThunk = createAsyncThunk(
     "categoryControllerCreateCategory",
     async (data: { data: CreateCategoryDto; params?: RequestParams }) => {
-      return await this.categoryControllerCreateCategory(data.data, data?.params);
+      return await this.categoryControllerCreateCategory(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -5325,8 +6543,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/category/{categoryId}
    * @secure
    */
-  categoryControllerGetCategoryById = (categoryId: string, params: RequestParams = {}) =>
-    this.request<GetOneCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  categoryControllerGetCategoryById = (
+    categoryId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetOneCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category/${categoryId}`,
       method: "GET",
       secure: true,
@@ -5339,7 +6563,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoryControllerGetCategoryByIdAsyncThunk = createAsyncThunk(
     "categoryControllerGetCategoryById",
     async (data: { categoryId: string; params?: RequestParams }) => {
-      return await this.categoryControllerGetCategoryById(data.categoryId, data?.params);
+      return await this.categoryControllerGetCategoryById(
+        data.categoryId,
+        data?.params,
+      );
     },
   );
 
@@ -5352,8 +6579,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/category/{categoryId}
    * @secure
    */
-  categoryControllerUpdateCategory = (categoryId: string, data: UpdateCategoryDto, params: RequestParams = {}) =>
-    this.request<UpdateCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  categoryControllerUpdateCategory = (
+    categoryId: string,
+    data: UpdateCategoryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category/${categoryId}`,
       method: "PUT",
       body: data,
@@ -5367,8 +6601,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for categoryControllerUpdateCategory */
   categoryControllerUpdateCategoryAsyncThunk = createAsyncThunk(
     "categoryControllerUpdateCategory",
-    async (data: { categoryId: string; data: UpdateCategoryDto; params?: RequestParams }) => {
-      return await this.categoryControllerUpdateCategory(data.categoryId, data.data, data?.params);
+    async (data: {
+      categoryId: string;
+      data: UpdateCategoryDto;
+      params?: RequestParams;
+    }) => {
+      return await this.categoryControllerUpdateCategory(
+        data.categoryId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -5381,8 +6623,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/category/{categoryId}
    * @secure
    */
-  categoryControllerDeleteCategory = (categoryId: string, params: RequestParams = {}) =>
-    this.request<DeleteCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  categoryControllerDeleteCategory = (
+    categoryId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category/${categoryId}`,
       method: "DELETE",
       secure: true,
@@ -5395,7 +6643,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoryControllerDeleteCategoryAsyncThunk = createAsyncThunk(
     "categoryControllerDeleteCategory",
     async (data: { categoryId: string; params?: RequestParams }) => {
-      return await this.categoryControllerDeleteCategory(data.categoryId, data?.params);
+      return await this.categoryControllerDeleteCategory(
+        data.categoryId,
+        data?.params,
+      );
     },
   );
 
@@ -5420,7 +6671,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category/landing`,
       method: "GET",
       query: query,
@@ -5433,8 +6687,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for categoryControllerGetPublicCategories */
   categoryControllerGetPublicCategoriesAsyncThunk = createAsyncThunk(
     "categoryControllerGetPublicCategories",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.categoryControllerGetPublicCategories(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.categoryControllerGetPublicCategories(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5447,8 +6707,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/category/landing/{categoryId}
    * @secure
    */
-  categoryControllerGetPublicCategoryById = (categoryId: string, params: RequestParams = {}) =>
-    this.request<GetOneCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  categoryControllerGetPublicCategoryById = (
+    categoryId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetOneCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category/landing/${categoryId}`,
       method: "GET",
       secure: true,
@@ -5461,7 +6727,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoryControllerGetPublicCategoryByIdAsyncThunk = createAsyncThunk(
     "categoryControllerGetPublicCategoryById",
     async (data: { categoryId: string; params?: RequestParams }) => {
-      return await this.categoryControllerGetPublicCategoryById(data.categoryId, data?.params);
+      return await this.categoryControllerGetPublicCategoryById(
+        data.categoryId,
+        data?.params,
+      );
     },
   );
 
@@ -5474,8 +6743,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/category/landing/slug/{slug}
    * @secure
    */
-  categoryControllerGetPostBySlug = (slug: string, params: RequestParams = {}) =>
-    this.request<GetOneCategoryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  categoryControllerGetPostBySlug = (
+    slug: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetOneCategoryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/category/landing/slug/${slug}`,
       method: "GET",
       secure: true,
@@ -5488,7 +6763,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   categoryControllerGetPostBySlugAsyncThunk = createAsyncThunk(
     "categoryControllerGetPostBySlug",
     async (data: { slug: string; params?: RequestParams }) => {
-      return await this.categoryControllerGetPostBySlug(data.slug, data?.params);
+      return await this.categoryControllerGetPostBySlug(
+        data.slug,
+        data?.params,
+      );
     },
   );
 
@@ -5536,7 +6814,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetPostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetPostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/category/${categoryId}`,
       method: "GET",
       query: query,
@@ -5565,7 +6846,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.postControllerGetPostWithCategory(data.categoryId, data?.query, data?.params);
+      return await this.postControllerGetPostWithCategory(
+        data.categoryId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5613,7 +6898,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetPostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetPostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/type/${type}`,
       method: "GET",
       query: query,
@@ -5642,7 +6930,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.postControllerGetPosts(data.type, data?.query, data?.params);
+      return await this.postControllerGetPosts(
+        data.type,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5690,7 +6982,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetByIdPostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetByIdPostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/post/${postId}`,
       method: "GET",
       query: query,
@@ -5719,7 +7014,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.postControllerGetPostById(data.postId, data?.query, data?.params);
+      return await this.postControllerGetPostById(
+        data.postId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5733,7 +7032,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   postControllerGetPostBySlug = (slug: string, params: RequestParams = {}) =>
-    this.request<GetByIdPostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetByIdPostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/slug/${slug}`,
       method: "GET",
       secure: true,
@@ -5772,7 +7074,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetPostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetPostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/category/slug/${slug}`,
       method: "GET",
       query: query,
@@ -5785,8 +7090,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for postControllerGetPostCategoryBySlug */
   postControllerGetPostCategoryBySlugAsyncThunk = createAsyncThunk(
     "postControllerGetPostCategoryBySlug",
-    async (data: { slug: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.postControllerGetPostCategoryBySlug(data.slug, data?.query, data?.params);
+    async (data: {
+      slug: string;
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.postControllerGetPostCategoryBySlug(
+        data.slug,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5830,7 +7143,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetPostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetPostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/landing/type/${type}`,
       method: "GET",
       query: query,
@@ -5857,7 +7173,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.postControllerGetPostsLanding(data.type, data?.query, data?.params);
+      return await this.postControllerGetPostsLanding(
+        data.type,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -5870,8 +7190,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/post
    * @secure
    */
-  postControllerCreatePost = (data: CreatePostDto, params: RequestParams = {}) =>
-    this.request<CreatePostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  postControllerCreatePost = (
+    data: CreatePostDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreatePostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post`,
       method: "POST",
       body: data,
@@ -5899,8 +7225,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/post/{postId}
    * @secure
    */
-  postControllerUpdatePost = (postId: string, data: UpdatePostDto, params: RequestParams = {}) =>
-    this.request<UpdatePostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  postControllerUpdatePost = (
+    postId: string,
+    data: UpdatePostDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdatePostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/${postId}`,
       method: "PUT",
       body: data,
@@ -5914,8 +7247,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for postControllerUpdatePost */
   postControllerUpdatePostAsyncThunk = createAsyncThunk(
     "postControllerUpdatePost",
-    async (data: { postId: string; data: UpdatePostDto; params?: RequestParams }) => {
-      return await this.postControllerUpdatePost(data.postId, data.data, data?.params);
+    async (data: {
+      postId: string;
+      data: UpdatePostDto;
+      params?: RequestParams;
+    }) => {
+      return await this.postControllerUpdatePost(
+        data.postId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -5929,7 +7270,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   postControllerDeletePost = (postId: string, params: RequestParams = {}) =>
-    this.request<DeletePostResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeletePostResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/post/${postId}`,
       method: "DELETE",
       secure: true,
@@ -5967,7 +7311,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetSuggestResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetSuggestResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/suggest`,
       method: "GET",
       query: query,
@@ -5980,7 +7327,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for suggestControllerGetSuggests */
   suggestControllerGetSuggestsAsyncThunk = createAsyncThunk(
     "suggestControllerGetSuggests",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
       return await this.suggestControllerGetSuggests(data?.query, data?.params);
     },
   );
@@ -5994,8 +7344,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/suggest
    * @secure
    */
-  suggestControllerCreateSuggest = (data: CreateSuggestDto, params: RequestParams = {}) =>
-    this.request<CreateSuggestResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  suggestControllerCreateSuggest = (
+    data: CreateSuggestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateSuggestResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/suggest`,
       method: "POST",
       body: data,
@@ -6023,8 +7379,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/suggest/{suggestId}
    * @secure
    */
-  suggestControllerGetSuggestByIdLanding = (suggestId: string, params: RequestParams = {}) =>
-    this.request<GetByIdSuggestResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  suggestControllerGetSuggestByIdLanding = (
+    suggestId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetByIdSuggestResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/suggest/${suggestId}`,
       method: "GET",
       secure: true,
@@ -6037,7 +7399,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   suggestControllerGetSuggestByIdLandingAsyncThunk = createAsyncThunk(
     "suggestControllerGetSuggestByIdLanding",
     async (data: { suggestId: string; params?: RequestParams }) => {
-      return await this.suggestControllerGetSuggestByIdLanding(data.suggestId, data?.params);
+      return await this.suggestControllerGetSuggestByIdLanding(
+        data.suggestId,
+        data?.params,
+      );
     },
   );
 
@@ -6050,8 +7415,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/suggest/{suggestId}
    * @secure
    */
-  suggestControllerUpdateSuggest = (suggestId: string, data: UpdateSuggestDto, params: RequestParams = {}) =>
-    this.request<UpdateSuggestResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  suggestControllerUpdateSuggest = (
+    suggestId: string,
+    data: UpdateSuggestDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateSuggestResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/suggest/${suggestId}`,
       method: "PUT",
       body: data,
@@ -6065,8 +7437,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for suggestControllerUpdateSuggest */
   suggestControllerUpdateSuggestAsyncThunk = createAsyncThunk(
     "suggestControllerUpdateSuggest",
-    async (data: { suggestId: string; data: UpdateSuggestDto; params?: RequestParams }) => {
-      return await this.suggestControllerUpdateSuggest(data.suggestId, data.data, data?.params);
+    async (data: {
+      suggestId: string;
+      data: UpdateSuggestDto;
+      params?: RequestParams;
+    }) => {
+      return await this.suggestControllerUpdateSuggest(
+        data.suggestId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6079,8 +7459,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/suggest/{suggestId}
    * @secure
    */
-  suggestControllerDeleteSuggest = (suggestId: string, params: RequestParams = {}) =>
-    this.request<DeleteSuggestResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  suggestControllerDeleteSuggest = (
+    suggestId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteSuggestResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/suggest/${suggestId}`,
       method: "DELETE",
       secure: true,
@@ -6093,7 +7479,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   suggestControllerDeleteSuggestAsyncThunk = createAsyncThunk(
     "suggestControllerDeleteSuggest",
     async (data: { suggestId: string; params?: RequestParams }) => {
-      return await this.suggestControllerDeleteSuggest(data.suggestId, data?.params);
+      return await this.suggestControllerDeleteSuggest(
+        data.suggestId,
+        data?.params,
+      );
     },
   );
 
@@ -6118,7 +7507,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetRoleResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetRoleResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role`,
       method: "GET",
       query: query,
@@ -6131,7 +7523,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for roleControllerGetRoles */
   roleControllerGetRolesAsyncThunk = createAsyncThunk(
     "roleControllerGetRoles",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
       return await this.roleControllerGetRoles(data?.query, data?.params);
     },
   );
@@ -6145,8 +7540,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/role
    * @secure
    */
-  roleControllerCreateRole = (data: CreateRoleDto, params: RequestParams = {}) =>
-    this.request<CreateRoleResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  roleControllerCreateRole = (
+    data: CreateRoleDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateRoleResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role`,
       method: "POST",
       body: data,
@@ -6175,7 +7576,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   roleControllerGetPermission = (params: RequestParams = {}) =>
-    this.request<PermissionExposeArrayDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      PermissionExposeArrayDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/permissions`,
       method: "GET",
       secure: true,
@@ -6227,7 +7631,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetRoleBySearchResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetRoleBySearchResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/search`,
       method: "GET",
       query: query,
@@ -6241,7 +7648,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   roleControllerSearchAsyncThunk = createAsyncThunk(
     "roleControllerSearch",
     async (data?: {
-      query?: { page?: number; limit?: number; start?: string; end?: string; permission?: number; title?: string };
+      query?: {
+        page?: number;
+        limit?: number;
+        start?: string;
+        end?: string;
+        permission?: number;
+        title?: string;
+      };
       params?: RequestParams;
     }) => {
       return await this.roleControllerSearch(data?.query, data?.params);
@@ -6258,7 +7672,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   roleControllerGetRoleById = (roleId: string, params: RequestParams = {}) =>
-    this.request<GetRoleResponseByIdDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetRoleResponseByIdDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/${roleId}`,
       method: "GET",
       secure: true,
@@ -6284,8 +7701,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/role/{roleId}
    * @secure
    */
-  roleControllerUpdateRole = (roleId: string, data: UpdateRoleDto, params: RequestParams = {}) =>
-    this.request<UpdateRoleResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  roleControllerUpdateRole = (
+    roleId: string,
+    data: UpdateRoleDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateRoleResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/${roleId}`,
       method: "PUT",
       body: data,
@@ -6299,8 +7723,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for roleControllerUpdateRole */
   roleControllerUpdateRoleAsyncThunk = createAsyncThunk(
     "roleControllerUpdateRole",
-    async (data: { roleId: string; data: UpdateRoleDto; params?: RequestParams }) => {
-      return await this.roleControllerUpdateRole(data.roleId, data.data, data?.params);
+    async (data: {
+      roleId: string;
+      data: UpdateRoleDto;
+      params?: RequestParams;
+    }) => {
+      return await this.roleControllerUpdateRole(
+        data.roleId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6313,8 +7745,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/role/{roleId}
    * @secure
    */
-  roleControllerAssignRole = (roleId: string, data: AssignRoleBodyDto, params: RequestParams = {}) =>
-    this.request<AssignRoleResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  roleControllerAssignRole = (
+    roleId: string,
+    data: AssignRoleBodyDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      AssignRoleResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/${roleId}`,
       method: "PATCH",
       body: data,
@@ -6328,8 +7767,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for roleControllerAssignRole */
   roleControllerAssignRoleAsyncThunk = createAsyncThunk(
     "roleControllerAssignRole",
-    async (data: { roleId: string; data: AssignRoleBodyDto; params?: RequestParams }) => {
-      return await this.roleControllerAssignRole(data.roleId, data.data, data?.params);
+    async (data: {
+      roleId: string;
+      data: AssignRoleBodyDto;
+      params?: RequestParams;
+    }) => {
+      return await this.roleControllerAssignRole(
+        data.roleId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6343,7 +7790,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   roleControllerDeleteRole = (roleId: string, params: RequestParams = {}) =>
-    this.request<DeleteRoleResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteRoleResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/${roleId}`,
       method: "DELETE",
       secure: true,
@@ -6369,8 +7819,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/role/delete/{roleId}
    * @secure
    */
-  roleControllerGetRoleRequestById = (roleId: string, params: RequestParams = {}) =>
-    this.request<RoleListUserResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  roleControllerGetRoleRequestById = (
+    roleId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      RoleListUserResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/role/delete/${roleId}`,
       method: "GET",
       secure: true,
@@ -6383,7 +7839,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   roleControllerGetRoleRequestByIdAsyncThunk = createAsyncThunk(
     "roleControllerGetRoleRequestById",
     async (data: { roleId: string; params?: RequestParams }) => {
-      return await this.roleControllerGetRoleRequestById(data.roleId, data?.params);
+      return await this.roleControllerGetRoleRequestById(
+        data.roleId,
+        data?.params,
+      );
     },
   );
 
@@ -6396,8 +7855,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/contact_us
    * @secure
    */
-  contactControllerCreateContactUs = (data: CreateContactUsDto, params: RequestParams = {}) =>
-    this.request<CreateContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  contactControllerCreateContactUs = (
+    data: CreateContactUsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us`,
       method: "POST",
       body: data,
@@ -6412,7 +7877,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   contactControllerCreateContactUsAsyncThunk = createAsyncThunk(
     "contactControllerCreateContactUs",
     async (data: { data: CreateContactUsDto; params?: RequestParams }) => {
-      return await this.contactControllerCreateContactUs(data.data, data?.params);
+      return await this.contactControllerCreateContactUs(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6455,7 +7923,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us`,
       method: "GET",
       query: query,
@@ -6494,8 +7965,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/contact_us/{contactId}
    * @secure
    */
-  contactControllerGetContactById = (contactId: string, params: RequestParams = {}) =>
-    this.request<GetByIdContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  contactControllerGetContactById = (
+    contactId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetByIdContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us/${contactId}`,
       method: "GET",
       secure: true,
@@ -6508,7 +7985,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   contactControllerGetContactByIdAsyncThunk = createAsyncThunk(
     "contactControllerGetContactById",
     async (data: { contactId: string; params?: RequestParams }) => {
-      return await this.contactControllerGetContactById(data.contactId, data?.params);
+      return await this.contactControllerGetContactById(
+        data.contactId,
+        data?.params,
+      );
     },
   );
 
@@ -6521,8 +8001,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/contact_us/{contactId}
    * @secure
    */
-  contactControllerDeleteContact = (contactId: string, params: RequestParams = {}) =>
-    this.request<DeleteContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  contactControllerDeleteContact = (
+    contactId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us/${contactId}`,
       method: "DELETE",
       secure: true,
@@ -6535,7 +8021,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   contactControllerDeleteContactAsyncThunk = createAsyncThunk(
     "contactControllerDeleteContact",
     async (data: { contactId: string; params?: RequestParams }) => {
-      return await this.contactControllerDeleteContact(data.contactId, data?.params);
+      return await this.contactControllerDeleteContact(
+        data.contactId,
+        data?.params,
+      );
     },
   );
 
@@ -6548,8 +8037,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/contact_us/status/{contactId}
    * @secure
    */
-  contactControllerUpdateContact = (contactId: string, data: UpdateContactUsDto, params: RequestParams = {}) =>
-    this.request<UpdateContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  contactControllerUpdateContact = (
+    contactId: string,
+    data: UpdateContactUsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us/status/${contactId}`,
       method: "PATCH",
       body: data,
@@ -6563,8 +8059,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for contactControllerUpdateContact */
   contactControllerUpdateContactAsyncThunk = createAsyncThunk(
     "contactControllerUpdateContact",
-    async (data: { contactId: string; data: UpdateContactUsDto; params?: RequestParams }) => {
-      return await this.contactControllerUpdateContact(data.contactId, data.data, data?.params);
+    async (data: {
+      contactId: string;
+      data: UpdateContactUsDto;
+      params?: RequestParams;
+    }) => {
+      return await this.contactControllerUpdateContact(
+        data.contactId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6577,8 +8081,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/contact_us/follow/up/{contactId}
    * @secure
    */
-  contactControllerFollowUpContact = (contactId: string, data: FollowUpContactUsDto, params: RequestParams = {}) =>
-    this.request<UpdateContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  contactControllerFollowUpContact = (
+    contactId: string,
+    data: FollowUpContactUsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us/follow/up/${contactId}`,
       method: "PATCH",
       body: data,
@@ -6592,8 +8103,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for contactControllerFollowUpContact */
   contactControllerFollowUpContactAsyncThunk = createAsyncThunk(
     "contactControllerFollowUpContact",
-    async (data: { contactId: string; data: FollowUpContactUsDto; params?: RequestParams }) => {
-      return await this.contactControllerFollowUpContact(data.contactId, data.data, data?.params);
+    async (data: {
+      contactId: string;
+      data: FollowUpContactUsDto;
+      params?: RequestParams;
+    }) => {
+      return await this.contactControllerFollowUpContact(
+        data.contactId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6606,8 +8125,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/contact_us/response/{contactId}
    * @secure
    */
-  contactControllerResponseeContact = (contactId: string, data: ResponseContactUsDto, params: RequestParams = {}) =>
-    this.request<UpdateContactResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  contactControllerResponseeContact = (
+    contactId: string,
+    data: ResponseContactUsDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateContactResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/contact_us/response/${contactId}`,
       method: "PATCH",
       body: data,
@@ -6621,8 +8147,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for contactControllerResponseeContact */
   contactControllerResponseeContactAsyncThunk = createAsyncThunk(
     "contactControllerResponseeContact",
-    async (data: { contactId: string; data: ResponseContactUsDto; params?: RequestParams }) => {
-      return await this.contactControllerResponseeContact(data.contactId, data.data, data?.params);
+    async (data: {
+      contactId: string;
+      data: ResponseContactUsDto;
+      params?: RequestParams;
+    }) => {
+      return await this.contactControllerResponseeContact(
+        data.contactId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6664,8 +8198,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for alertControllerPublicGetAlertByProductId */
   alertControllerPublicGetAlertByProductIdAsyncThunk = createAsyncThunk(
     "alertControllerPublicGetAlertByProductId",
-    async (data: { productId: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.alertControllerPublicGetAlertByProductId(data.productId, data?.query, data?.params);
+    async (data: {
+      productId: string;
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.alertControllerPublicGetAlertByProductId(
+        data.productId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -6678,8 +8220,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/alert
    * @secure
    */
-  alertControllerCreateAlert = (data: CreateAlertDto, params: RequestParams = {}) =>
-    this.request<CreateAlertResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  alertControllerCreateAlert = (
+    data: CreateAlertDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateAlertResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/alert`,
       method: "POST",
       body: data,
@@ -6729,7 +8277,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetAlertResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetAlertResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/alert/search`,
       method: "GET",
       query: query,
@@ -6754,7 +8305,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.alertControllerGetAlertWithSearch(data?.query, data?.params);
+      return await this.alertControllerGetAlertWithSearch(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -6768,7 +8322,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   alertControllerGetAlertById = (alertId: string, params: RequestParams = {}) =>
-    this.request<GetByIdAlertResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetByIdAlertResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/alert/${alertId}`,
       method: "GET",
       secure: true,
@@ -6795,7 +8352,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   alertControllerDeleteAlert = (alertId: string, params: RequestParams = {}) =>
-    this.request<DeleteAlertResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteAlertResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/alert/${alertId}`,
       method: "DELETE",
       secure: true,
@@ -6821,8 +8381,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/alert/{alert_id}
    * @secure
    */
-  alertControllerUpdateAlert = (alertId: string, data: UpdateAlertDto, params: RequestParams = {}) =>
-    this.request<UpdateAlertResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  alertControllerUpdateAlert = (
+    alertId: string,
+    data: UpdateAlertDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateAlertResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/alert/${alertId}`,
       method: "PUT",
       body: data,
@@ -6836,8 +8403,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for alertControllerUpdateAlert */
   alertControllerUpdateAlertAsyncThunk = createAsyncThunk(
     "alertControllerUpdateAlert",
-    async (data: { alertId: string; data: UpdateAlertDto; params?: RequestParams }) => {
-      return await this.alertControllerUpdateAlert(data.alertId, data.data, data?.params);
+    async (data: {
+      alertId: string;
+      data: UpdateAlertDto;
+      params?: RequestParams;
+    }) => {
+      return await this.alertControllerUpdateAlert(
+        data.alertId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -6851,7 +8426,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerContactus = (params: RequestParams = {}) =>
-    this.request<ContactUsStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      ContactUsStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/contactus`,
       method: "GET",
       secure: true,
@@ -6878,7 +8456,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerComment = (params: RequestParams = {}) =>
-    this.request<CommentStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      CommentStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/comment`,
       method: "GET",
       secure: true,
@@ -6905,7 +8486,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerUser = (params: RequestParams = {}) =>
-    this.request<UserStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      UserStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/user`,
       method: "GET",
       secure: true,
@@ -6932,7 +8516,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerOrder = (params: RequestParams = {}) =>
-    this.request<OrderStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      OrderStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/order`,
       method: "GET",
       secure: true,
@@ -6953,40 +8540,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * No description
    *
    * @tags Statistic
-   * @name StatisticControllerOrderStatus
-   * @summary Order Status Statistics
-   * @request GET:/api/v1/statistic/order/status
-   * @secure
-   */
-  statisticControllerOrderStatus = (params: RequestParams = {}) =>
-    this.request<OrderStatStatusCount, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
-      path: `/api/v1/statistic/order/status`,
-      method: "GET",
-      secure: true,
-      format: "json",
-      ...params,
-    });
-
-  /**
-   * Redux AsyncThunk for statisticControllerOrderStatus */
-  statisticControllerOrderStatusAsyncThunk = createAsyncThunk(
-    "statisticControllerOrderStatus",
-    async (data?: { params?: RequestParams }) => {
-      return await this.statisticControllerOrderStatus(data?.params);
-    },
-  );
-
-  /**
-   * No description
-   *
-   * @tags Statistic
    * @name StatisticControllerOrderStatusCount
    * @summary Order Status Count
    * @request GET:/api/v1/statistic/order/current/status
    * @secure
    */
   statisticControllerOrderStatusCount = (params: RequestParams = {}) =>
-    this.request<OrderStatStatusCount, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      OrderStatStatusCount,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/order/current/status`,
       method: "GET",
       secure: true,
@@ -7013,7 +8576,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerOrderList = (params: RequestParams = {}) =>
-    this.request<OrderStatListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      OrderStatListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/order/list`,
       method: "GET",
       secure: true,
@@ -7027,6 +8593,36 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     "statisticControllerOrderList",
     async (data?: { params?: RequestParams }) => {
       return await this.statisticControllerOrderList(data?.params);
+    },
+  );
+
+  /**
+   * No description
+   *
+   * @tags Statistic
+   * @name StatisticControllerOrderDailyList
+   * @summary Order Daily Statistics
+   * @request GET:/api/v1/statistic/order/daily
+   * @secure
+   */
+  statisticControllerOrderDailyList = (params: RequestParams = {}) =>
+    this.request<
+      OrderStatDailyResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/statistic/order/daily`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * Redux AsyncThunk for statisticControllerOrderDailyList */
+  statisticControllerOrderDailyListAsyncThunk = createAsyncThunk(
+    "statisticControllerOrderDailyList",
+    async (data?: { params?: RequestParams }) => {
+      return await this.statisticControllerOrderDailyList(data?.params);
     },
   );
 
@@ -7054,7 +8650,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<DashboardStatsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DashboardStatsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/order/count`,
       method: "GET",
       query: query,
@@ -7067,8 +8666,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for statisticControllerProductStat */
   statisticControllerProductStatAsyncThunk = createAsyncThunk(
     "statisticControllerProductStat",
-    async (data: { query: { started_at: string; ended_at: string }; params?: RequestParams }) => {
-      return await this.statisticControllerProductStat(data.query, data?.params);
+    async (data: {
+      query: { started_at: string; ended_at: string };
+      params?: RequestParams;
+    }) => {
+      return await this.statisticControllerProductStat(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -7104,7 +8709,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<ChartResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      ChartResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/order/chart/generator`,
       method: "GET",
       query: query,
@@ -7118,10 +8726,19 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   statisticControllerChartGeneratorAsyncThunk = createAsyncThunk(
     "statisticControllerChartGenerator",
     async (data: {
-      query: { started_at: string; ended_at: string; group_by: GroupByFields[]; order_by: OrderBy; sort: SortOrder };
+      query: {
+        started_at: string;
+        ended_at: string;
+        group_by: GroupByFields[];
+        order_by: OrderBy;
+        sort: SortOrder;
+      };
       params?: RequestParams;
     }) => {
-      return await this.statisticControllerChartGenerator(data.query, data?.params);
+      return await this.statisticControllerChartGenerator(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -7141,7 +8758,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<AppleIdStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      AppleIdStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/appleid`,
       method: "GET",
       query: query,
@@ -7207,7 +8827,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<InvoiceStatStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      InvoiceStatStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/invoice`,
       method: "GET",
       query: query,
@@ -7220,7 +8843,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for statisticControllerInvoice */
   statisticControllerInvoiceAsyncThunk = createAsyncThunk(
     "statisticControllerInvoice",
-    async (data?: { query?: { take?: number; sort?: SortOrder }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { take?: number; sort?: SortOrder };
+      params?: RequestParams;
+    }) => {
       return await this.statisticControllerInvoice(data?.query, data?.params);
     },
   );
@@ -7235,7 +8861,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerDashboard = (params: RequestParams = {}) =>
-    this.request<DashboardStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DashboardStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/dashboard`,
       method: "GET",
       secure: true,
@@ -7285,7 +8914,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<TimerOrderStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      TimerOrderStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/timer`,
       method: "GET",
       query: query,
@@ -7324,15 +8956,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   statisticControllerTimerDashboard = (params: RequestParams = {}) =>
-    this.request<TimerDashboardStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/statistic/timer/dashboard`,
-        method: "GET",
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      TimerDashboardStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/statistic/timer/dashboard`,
+      method: "GET",
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for statisticControllerTimerDashboard */
@@ -7405,8 +9038,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for statisticControllerTimerDashboardList */
   statisticControllerTimerDashboardListAsyncThunk = createAsyncThunk(
     "statisticControllerTimerDashboardList",
-    async (data: { query: { type: TimerDashboardFilterType }; params?: RequestParams }) => {
-      return await this.statisticControllerTimerDashboardList(data.query, data?.params);
+    async (data: {
+      query: { type: TimerDashboardFilterType };
+      params?: RequestParams;
+    }) => {
+      return await this.statisticControllerTimerDashboardList(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -7428,7 +9067,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<TimerStatByIdsResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      TimerStatByIdsResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/timer/dashboard/states`,
       method: "GET",
       query: query,
@@ -7441,8 +9083,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for statisticControllerTimerDashboardStates */
   statisticControllerTimerDashboardStatesAsyncThunk = createAsyncThunk(
     "statisticControllerTimerDashboardStates",
-    async (data?: { query?: { user_ids?: string[]; product_ids?: string[] }; params?: RequestParams }) => {
-      return await this.statisticControllerTimerDashboardStates(data?.query, data?.params);
+    async (data?: {
+      query?: { user_ids?: string[]; product_ids?: string[] };
+      params?: RequestParams;
+    }) => {
+      return await this.statisticControllerTimerDashboardStates(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -7455,8 +9103,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/statistic/timer/order/{order_id}
    * @secure
    */
-  statisticControllerTimerOrderStat = (orderId: string, params: RequestParams = {}) =>
-    this.request<TimerOrderStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  statisticControllerTimerOrderStat = (
+    orderId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      TimerOrderStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/timer/order/${orderId}`,
       method: "GET",
       secure: true,
@@ -7469,7 +9123,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   statisticControllerTimerOrderStatAsyncThunk = createAsyncThunk(
     "statisticControllerTimerOrderStat",
     async (data: { orderId: string; params?: RequestParams }) => {
-      return await this.statisticControllerTimerOrderStat(data.orderId, data?.params);
+      return await this.statisticControllerTimerOrderStat(
+        data.orderId,
+        data?.params,
+      );
     },
   );
 
@@ -7482,8 +9139,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/statistic/timer/user/{user_id}
    * @secure
    */
-  statisticControllerTimerUserStat = (userId: string, params: RequestParams = {}) =>
-    this.request<TimerUserStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  statisticControllerTimerUserStat = (
+    userId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      TimerUserStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/timer/user/${userId}`,
       method: "GET",
       secure: true,
@@ -7496,7 +9159,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   statisticControllerTimerUserStatAsyncThunk = createAsyncThunk(
     "statisticControllerTimerUserStat",
     async (data: { userId: string; params?: RequestParams }) => {
-      return await this.statisticControllerTimerUserStat(data.userId, data?.params);
+      return await this.statisticControllerTimerUserStat(
+        data.userId,
+        data?.params,
+      );
     },
   );
 
@@ -7509,8 +9175,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/statistic/timer/product/{product_id}
    * @secure
    */
-  statisticControllerTimerProductStat = (productId: string, params: RequestParams = {}) =>
-    this.request<TimerProductStatResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  statisticControllerTimerProductStat = (
+    productId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      TimerProductStatResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/statistic/timer/product/${productId}`,
       method: "GET",
       secure: true,
@@ -7523,7 +9195,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   statisticControllerTimerProductStatAsyncThunk = createAsyncThunk(
     "statisticControllerTimerProductStat",
     async (data: { productId: string; params?: RequestParams }) => {
-      return await this.statisticControllerTimerProductStat(data.productId, data?.params);
+      return await this.statisticControllerTimerProductStat(
+        data.productId,
+        data?.params,
+      );
     },
   );
 
@@ -7536,7 +9211,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/statistic/timer/product/category/{product_category_id}
    * @secure
    */
-  statisticControllerTimerProductCategoryStat = (productCategoryId: string, params: RequestParams = {}) =>
+  statisticControllerTimerProductCategoryStat = (
+    productCategoryId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       TimerProductCategoryStatResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -7553,7 +9231,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   statisticControllerTimerProductCategoryStatAsyncThunk = createAsyncThunk(
     "statisticControllerTimerProductCategoryStat",
     async (data: { productCategoryId: string; params?: RequestParams }) => {
-      return await this.statisticControllerTimerProductCategoryStat(data.productCategoryId, data?.params);
+      return await this.statisticControllerTimerProductCategoryStat(
+        data.productCategoryId,
+        data?.params,
+      );
     },
   );
 
@@ -7615,7 +9296,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.statisticControllerTimerChartGenerator(data.query, data?.params);
+      return await this.statisticControllerTimerChartGenerator(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -7641,7 +9325,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<SearchResponseProductDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      SearchResponseProductDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/search/search`,
       method: "GET",
       query: query,
@@ -7653,7 +9340,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for searchControllerGetSearchs */
   searchControllerGetSearchsAsyncThunk = createAsyncThunk(
     "searchControllerGetSearchs",
-    async (data?: { query?: { page?: number; limit?: number; text?: string }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { page?: number; limit?: number; text?: string };
+      params?: RequestParams;
+    }) => {
       return await this.searchControllerGetSearchs(data?.query, data?.params);
     },
   );
@@ -7721,7 +9411,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.searchControllerGetTopSellingProducts(data.query, data?.params);
+      return await this.searchControllerGetTopSellingProducts(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -7763,7 +9456,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<SearchUserSellingResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      SearchUserSellingResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/search/user/selling`,
       method: "GET",
       query: query,
@@ -7788,7 +9484,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.searchControllerGetTopSellingUserss(data.query, data?.params);
+      return await this.searchControllerGetTopSellingUserss(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -7827,7 +9526,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetTagResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetTagResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/tag`,
       method: "GET",
       query: query,
@@ -7841,7 +9543,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   tagControllerGetTagListAsyncThunk = createAsyncThunk(
     "tagControllerGetTagList",
     async (data?: {
-      query?: { page?: number; limit?: number; name?: string; status?: TAG_STATUS; start?: string; end?: string };
+      query?: {
+        page?: number;
+        limit?: number;
+        name?: string;
+        status?: TAG_STATUS;
+        start?: string;
+        end?: string;
+      };
       params?: RequestParams;
     }) => {
       return await this.tagControllerGetTagList(data?.query, data?.params);
@@ -7858,7 +9567,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   tagControllerCreateTag = (data: CreateTagDto, params: RequestParams = {}) =>
-    this.request<CreateTagResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      CreateTagResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/tag`,
       method: "POST",
       body: data,
@@ -7886,8 +9598,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/tag/{tagId}
    * @secure
    */
-  tagControllerUpdateTag = (tagId: string, data: UpdateTagDto, params: RequestParams = {}) =>
-    this.request<UpdateTagResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  tagControllerUpdateTag = (
+    tagId: string,
+    data: UpdateTagDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateTagResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/tag/${tagId}`,
       method: "PUT",
       body: data,
@@ -7901,8 +9620,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for tagControllerUpdateTag */
   tagControllerUpdateTagAsyncThunk = createAsyncThunk(
     "tagControllerUpdateTag",
-    async (data: { tagId: string; data: UpdateTagDto; params?: RequestParams }) => {
-      return await this.tagControllerUpdateTag(data.tagId, data.data, data?.params);
+    async (data: {
+      tagId: string;
+      data: UpdateTagDto;
+      params?: RequestParams;
+    }) => {
+      return await this.tagControllerUpdateTag(
+        data.tagId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -7916,7 +9643,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   tagControllerDeleteTag = (tagId: string, params: RequestParams = {}) =>
-    this.request<DeleteTagResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteTagResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/tag/${tagId}`,
       method: "DELETE",
       secure: true,
@@ -7942,8 +9672,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/country
    * @secure
    */
-  countryControllerCreateCountry = (data: CreateCountryDto, params: RequestParams = {}) =>
-    this.request<CreateCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  countryControllerCreateCountry = (
+    data: CreateCountryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country`,
       method: "POST",
       body: data,
@@ -7997,7 +9733,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country`,
       method: "GET",
       query: query,
@@ -8036,8 +9775,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/country/{country_id}
    * @secure
    */
-  countryControllerGetCountryById = (countryId: string, params: RequestParams = {}) =>
-    this.request<GetDetailCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  countryControllerGetCountryById = (
+    countryId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetDetailCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country/${countryId}`,
       method: "GET",
       secure: true,
@@ -8050,7 +9795,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   countryControllerGetCountryByIdAsyncThunk = createAsyncThunk(
     "countryControllerGetCountryById",
     async (data: { countryId: string; params?: RequestParams }) => {
-      return await this.countryControllerGetCountryById(data.countryId, data?.params);
+      return await this.countryControllerGetCountryById(
+        data.countryId,
+        data?.params,
+      );
     },
   );
 
@@ -8063,8 +9811,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/country/{country_id}
    * @secure
    */
-  countryControllerUpdateCountry = (countryId: string, data: UpdateCountryDto, params: RequestParams = {}) =>
-    this.request<UpdateCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  countryControllerUpdateCountry = (
+    countryId: string,
+    data: UpdateCountryDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country/${countryId}`,
       method: "PUT",
       body: data,
@@ -8078,8 +9833,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for countryControllerUpdateCountry */
   countryControllerUpdateCountryAsyncThunk = createAsyncThunk(
     "countryControllerUpdateCountry",
-    async (data: { countryId: string; data: UpdateCountryDto; params?: RequestParams }) => {
-      return await this.countryControllerUpdateCountry(data.countryId, data.data, data?.params);
+    async (data: {
+      countryId: string;
+      data: UpdateCountryDto;
+      params?: RequestParams;
+    }) => {
+      return await this.countryControllerUpdateCountry(
+        data.countryId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8092,8 +9855,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/country/{country_id}
    * @secure
    */
-  countryControllerDeleteCountry = (countryId: string, params: RequestParams = {}) =>
-    this.request<DeleteCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  countryControllerDeleteCountry = (
+    countryId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country/${countryId}`,
       method: "DELETE",
       secure: true,
@@ -8106,7 +9875,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   countryControllerDeleteCountryAsyncThunk = createAsyncThunk(
     "countryControllerDeleteCountry",
     async (data: { countryId: string; params?: RequestParams }) => {
-      return await this.countryControllerDeleteCountry(data.countryId, data?.params);
+      return await this.countryControllerDeleteCountry(
+        data.countryId,
+        data?.params,
+      );
     },
   );
 
@@ -8124,7 +9896,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: CreateCountryQuestionDto,
     params: RequestParams = {},
   ) =>
-    this.request<GetDetailCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetDetailCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country/question/${countryId}`,
       method: "PUT",
       body: data,
@@ -8138,8 +9913,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for countryControllerCreateCountryQuestions */
   countryControllerCreateCountryQuestionsAsyncThunk = createAsyncThunk(
     "countryControllerCreateCountryQuestions",
-    async (data: { countryId: string; data: CreateCountryQuestionDto; params?: RequestParams }) => {
-      return await this.countryControllerCreateCountryQuestions(data.countryId, data.data, data?.params);
+    async (data: {
+      countryId: string;
+      data: CreateCountryQuestionDto;
+      params?: RequestParams;
+    }) => {
+      return await this.countryControllerCreateCountryQuestions(
+        data.countryId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8157,7 +9940,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: DeleteCountryQuestionDto,
     params: RequestParams = {},
   ) =>
-    this.request<GetDetailCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetDetailCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country/question/${countryId}`,
       method: "DELETE",
       body: data,
@@ -8171,8 +9957,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for countryControllerDeleteCountryQuestions */
   countryControllerDeleteCountryQuestionsAsyncThunk = createAsyncThunk(
     "countryControllerDeleteCountryQuestions",
-    async (data: { countryId: string; data: DeleteCountryQuestionDto; params?: RequestParams }) => {
-      return await this.countryControllerDeleteCountryQuestions(data.countryId, data.data, data?.params);
+    async (data: {
+      countryId: string;
+      data: DeleteCountryQuestionDto;
+      params?: RequestParams;
+    }) => {
+      return await this.countryControllerDeleteCountryQuestions(
+        data.countryId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8191,7 +9985,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: UpdateCountryQuestionDto,
     params: RequestParams = {},
   ) =>
-    this.request<GetDetailCountryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetDetailCountryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/country/question/update/${countryId}/${currentTitle}`,
       method: "PUT",
       body: data,
@@ -8257,7 +10054,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetOfferResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetOfferResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/offer`,
       method: "GET",
       query: query,
@@ -8295,8 +10095,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/offer
    * @secure
    */
-  offerControllerCreateOffer = (data: CreateOfferDto, params: RequestParams = {}) =>
-    this.request<CreateOfferResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  offerControllerCreateOffer = (
+    data: CreateOfferDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateOfferResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/offer`,
       method: "POST",
       body: data,
@@ -8325,7 +10131,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   offerControllerGetOfferById = (offerId: string, params: RequestParams = {}) =>
-    this.request<GetOneOfferResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetOneOfferResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/offer/${offerId}`,
       method: "GET",
       secure: true,
@@ -8351,8 +10160,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/offer/{offerId}
    * @secure
    */
-  offerControllerUpdateOffer = (offerId: string, data: UpdateOfferDto, params: RequestParams = {}) =>
-    this.request<UpdateOfferResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  offerControllerUpdateOffer = (
+    offerId: string,
+    data: UpdateOfferDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateOfferResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/offer/${offerId}`,
       method: "PUT",
       body: data,
@@ -8366,8 +10182,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for offerControllerUpdateOffer */
   offerControllerUpdateOfferAsyncThunk = createAsyncThunk(
     "offerControllerUpdateOffer",
-    async (data: { offerId: string; data: UpdateOfferDto; params?: RequestParams }) => {
-      return await this.offerControllerUpdateOffer(data.offerId, data.data, data?.params);
+    async (data: {
+      offerId: string;
+      data: UpdateOfferDto;
+      params?: RequestParams;
+    }) => {
+      return await this.offerControllerUpdateOffer(
+        data.offerId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8381,7 +10205,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   offerControllerDeleteOffer = (offerId: string, params: RequestParams = {}) =>
-    this.request<DeleteOfferResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteOfferResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/offer/${offerId}`,
       method: "DELETE",
       secure: true,
@@ -8407,8 +10234,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/offer/pubilc/{code}/{product_id}
    * @secure
    */
-  offerControllerGetOfferByCode = (code: string, productId: string, params: RequestParams = {}) =>
-    this.request<GetByCodeOfferResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  offerControllerGetOfferByCode = (
+    code: string,
+    productId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetByCodeOfferResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/offer/pubilc/${code}/${productId}`,
       method: "GET",
       secure: true,
@@ -8420,8 +10254,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for offerControllerGetOfferByCode */
   offerControllerGetOfferByCodeAsyncThunk = createAsyncThunk(
     "offerControllerGetOfferByCode",
-    async (data: { code: string; productId: string; params?: RequestParams }) => {
-      return await this.offerControllerGetOfferByCode(data.code, data.productId, data?.params);
+    async (data: {
+      code: string;
+      productId: string;
+      params?: RequestParams;
+    }) => {
+      return await this.offerControllerGetOfferByCode(
+        data.code,
+        data.productId,
+        data?.params,
+      );
     },
   );
 
@@ -8434,8 +10276,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/file/upload
    * @secure
    */
-  fileControllerUploadFile = (data: UploadFileDto, params: RequestParams = {}) =>
-    this.request<UploadFileResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  fileControllerUploadFile = (
+    data: UploadFileDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UploadFileResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/file/upload`,
       method: "POST",
       body: data,
@@ -8463,8 +10311,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/file/upload/excel
    * @secure
    */
-  fileControllerUploadExcelFile = (data: UploadFileDto, params: RequestParams = {}) =>
-    this.request<UploadFileResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  fileControllerUploadExcelFile = (
+    data: UploadFileDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UploadFileResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/file/upload/excel`,
       method: "POST",
       body: data,
@@ -8504,6 +10358,8 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       limit?: number;
       /** name */
       name?: string;
+      /** Sort order */
+      sort?: SortOrder;
       /**
        * Start Date
        * @format date-time
@@ -8517,7 +10373,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GalleryResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GalleryResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/file/${type}`,
       method: "GET",
       query: query,
@@ -8532,10 +10391,21 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     "fileControllerGetGallery",
     async (data: {
       type: FILE_TYPE;
-      query?: { page?: number; limit?: number; name?: string; start?: string; end?: string };
+      query?: {
+        page?: number;
+        limit?: number;
+        name?: string;
+        sort?: SortOrder;
+        start?: string;
+        end?: string;
+      };
       params?: RequestParams;
     }) => {
-      return await this.fileControllerGetGallery(data.type, data?.query, data?.params);
+      return await this.fileControllerGetGallery(
+        data.type,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -8548,7 +10418,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/file/{type}/{query}
    * @secure
    */
-  fileControllerGetFile = (query: string, type: FileQueryType, params: RequestParams = {}) =>
+  fileControllerGetFile = (
+    query: string,
+    type: FileQueryType,
+    params: RequestParams = {},
+  ) =>
     this.request<void, any>({
       path: `/api/v1/file/${type}/${query}`,
       method: "GET",
@@ -8560,8 +10434,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for fileControllerGetFile */
   fileControllerGetFileAsyncThunk = createAsyncThunk(
     "fileControllerGetFile",
-    async (data: { query: string; type: FileQueryType; params?: RequestParams }) => {
-      return await this.fileControllerGetFile(data.query, data.type, data?.params);
+    async (data: {
+      query: string;
+      type: FileQueryType;
+      params?: RequestParams;
+    }) => {
+      return await this.fileControllerGetFile(
+        data.query,
+        data.type,
+        data?.params,
+      );
     },
   );
 
@@ -8575,7 +10457,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   fileControllerRemoveFile = (fileId: string, params: RequestParams = {}) =>
-    this.request<DeleteFileResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteFileResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/file/${fileId}`,
       method: "DELETE",
       secure: true,
@@ -8617,7 +10502,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetListSettingResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetListSettingResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/setting`,
       method: "GET",
       query: query,
@@ -8631,10 +10519,18 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   settingControllerGetSettingListAsyncThunk = createAsyncThunk(
     "settingControllerGetSettingList",
     async (data?: {
-      query?: { page?: number; limit?: number; search_text?: string; type?: SETTING_TYPE };
+      query?: {
+        page?: number;
+        limit?: number;
+        search_text?: string;
+        type?: SETTING_TYPE;
+      };
       params?: RequestParams;
     }) => {
-      return await this.settingControllerGetSettingList(data?.query, data?.params);
+      return await this.settingControllerGetSettingList(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -8647,8 +10543,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/setting
    * @secure
    */
-  settingControllerCreateSetting = (data: CreateSettingDto, params: RequestParams = {}) =>
-    this.request<CreateSettingResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  settingControllerCreateSetting = (
+    data: CreateSettingDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateSettingResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/setting`,
       method: "POST",
       body: data,
@@ -8685,7 +10587,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetSettingDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetSettingDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/setting/detail`,
       method: "GET",
       query: query,
@@ -8698,8 +10603,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for settingControllerGetSettingById */
   settingControllerGetSettingByIdAsyncThunk = createAsyncThunk(
     "settingControllerGetSettingById",
-    async (data?: { query?: { setting_id?: string; key?: string }; params?: RequestParams }) => {
-      return await this.settingControllerGetSettingById(data?.query, data?.params);
+    async (data?: {
+      query?: { setting_id?: string; key?: string };
+      params?: RequestParams;
+    }) => {
+      return await this.settingControllerGetSettingById(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -8712,8 +10623,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/setting/{setting_id}
    * @secure
    */
-  settingControllerUpdateSetting = (settingId: string, data: UpdateSettingDto, params: RequestParams = {}) =>
-    this.request<UpdateSettingResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  settingControllerUpdateSetting = (
+    settingId: string,
+    data: UpdateSettingDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateSettingResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/setting/${settingId}`,
       method: "PUT",
       body: data,
@@ -8727,8 +10645,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for settingControllerUpdateSetting */
   settingControllerUpdateSettingAsyncThunk = createAsyncThunk(
     "settingControllerUpdateSetting",
-    async (data: { settingId: string; data: UpdateSettingDto; params?: RequestParams }) => {
-      return await this.settingControllerUpdateSetting(data.settingId, data.data, data?.params);
+    async (data: {
+      settingId: string;
+      data: UpdateSettingDto;
+      params?: RequestParams;
+    }) => {
+      return await this.settingControllerUpdateSetting(
+        data.settingId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8741,8 +10667,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/setting/{setting_id}
    * @secure
    */
-  settingControllerDeleteSetting = (settingId: string, params: RequestParams = {}) =>
-    this.request<DeleteSettingResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  settingControllerDeleteSetting = (
+    settingId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteSettingResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/setting/${settingId}`,
       method: "DELETE",
       secure: true,
@@ -8755,7 +10687,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   settingControllerDeleteSettingAsyncThunk = createAsyncThunk(
     "settingControllerDeleteSetting",
     async (data: { settingId: string; params?: RequestParams }) => {
-      return await this.settingControllerDeleteSetting(data.settingId, data?.params);
+      return await this.settingControllerDeleteSetting(
+        data.settingId,
+        data?.params,
+      );
     },
   );
 
@@ -8766,7 +10701,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @name SeoControllerGetRssProduct
    * @request GET:/api/v1/rss/{file_name}
    */
-  seoControllerGetRssProduct = (fileName: RSS_FILE_NAME, params: RequestParams = {}) =>
+  seoControllerGetRssProduct = (
+    fileName: RSS_FILE_NAME,
+    params: RequestParams = {},
+  ) =>
     this.request<void, any>({
       path: `/api/v1/rss/${fileName}`,
       method: "GET",
@@ -8803,7 +10741,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetElementResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetElementResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form/elements`,
       method: "GET",
       query: query,
@@ -8816,7 +10757,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formControllerGetElementList */
   formControllerGetElementListAsyncThunk = createAsyncThunk(
     "formControllerGetElementList",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
       return await this.formControllerGetElementList(data?.query, data?.params);
     },
   );
@@ -8830,8 +10774,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/form
    * @secure
    */
-  formControllerCreateFormComplete = (data: CreateFormDto, params: RequestParams = {}) =>
-    this.request<GetFormDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formControllerCreateFormComplete = (
+    data: CreateFormDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetFormDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form`,
       method: "POST",
       body: data,
@@ -8846,7 +10796,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   formControllerCreateFormCompleteAsyncThunk = createAsyncThunk(
     "formControllerCreateFormComplete",
     async (data: { data: CreateFormDto; params?: RequestParams }) => {
-      return await this.formControllerCreateFormComplete(data.data, data?.params);
+      return await this.formControllerCreateFormComplete(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8877,7 +10830,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetFormListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetFormListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form`,
       method: "GET",
       query: query,
@@ -8891,7 +10847,13 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   formControllerGetFormsAsyncThunk = createAsyncThunk(
     "formControllerGetForms",
     async (data?: {
-      query?: { page?: number; limit?: number; user_id?: string; name?: string; title?: string };
+      query?: {
+        page?: number;
+        limit?: number;
+        user_id?: string;
+        name?: string;
+        title?: string;
+      };
       params?: RequestParams;
     }) => {
       return await this.formControllerGetForms(data?.query, data?.params);
@@ -8907,8 +10869,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/form/{form_id}
    * @secure
    */
-  formControllerUpdateForm = (formId: string, data: UpdateFormDto, params: RequestParams = {}) =>
-    this.request<GetFormDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formControllerUpdateForm = (
+    formId: string,
+    data: UpdateFormDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetFormDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form/${formId}`,
       method: "PUT",
       body: data,
@@ -8922,8 +10891,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formControllerUpdateForm */
   formControllerUpdateFormAsyncThunk = createAsyncThunk(
     "formControllerUpdateForm",
-    async (data: { formId: string; data: UpdateFormDto; params?: RequestParams }) => {
-      return await this.formControllerUpdateForm(data.formId, data.data, data?.params);
+    async (data: {
+      formId: string;
+      data: UpdateFormDto;
+      params?: RequestParams;
+    }) => {
+      return await this.formControllerUpdateForm(
+        data.formId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -8937,7 +10914,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   formControllerGetFormDetail = (formId: string, params: RequestParams = {}) =>
-    this.request<GetFormDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetFormDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form/${formId}`,
       method: "GET",
       secure: true,
@@ -8963,8 +10943,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/form/product/{product_id}
    * @secure
    */
-  formControllerGetFormByProduct = (productId: string, params: RequestParams = {}) =>
-    this.request<GetFormDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formControllerGetFormByProduct = (
+    productId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetFormDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form/product/${productId}`,
       method: "GET",
       secure: true,
@@ -8977,7 +10963,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   formControllerGetFormByProductAsyncThunk = createAsyncThunk(
     "formControllerGetFormByProduct",
     async (data: { productId: string; params?: RequestParams }) => {
-      return await this.formControllerGetFormByProduct(data.productId, data?.params);
+      return await this.formControllerGetFormByProduct(
+        data.productId,
+        data?.params,
+      );
     },
   );
 
@@ -8990,7 +10979,11 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/form/assign/product/{form_id}
    * @secure
    */
-  formControllerAssignFormToProduct = (formId: string, data: AssignFormToProductDto, params: RequestParams = {}) =>
+  formControllerAssignFormToProduct = (
+    formId: string,
+    data: AssignFormToProductDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       AssignFormToProductResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9008,8 +11001,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formControllerAssignFormToProduct */
   formControllerAssignFormToProductAsyncThunk = createAsyncThunk(
     "formControllerAssignFormToProduct",
-    async (data: { formId: string; data: AssignFormToProductDto; params?: RequestParams }) => {
-      return await this.formControllerAssignFormToProduct(data.formId, data.data, data?.params);
+    async (data: {
+      formId: string;
+      data: AssignFormToProductDto;
+      params?: RequestParams;
+    }) => {
+      return await this.formControllerAssignFormToProduct(
+        data.formId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9047,8 +11048,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formControllerCheckAssignFormToProduct */
   formControllerCheckAssignFormToProductAsyncThunk = createAsyncThunk(
     "formControllerCheckAssignFormToProduct",
-    async (data?: { query?: { product_ids?: string[]; category_ids?: string[] }; params?: RequestParams }) => {
-      return await this.formControllerCheckAssignFormToProduct(data?.query, data?.params);
+    async (data?: {
+      query?: { product_ids?: string[]; category_ids?: string[] };
+      params?: RequestParams;
+    }) => {
+      return await this.formControllerCheckAssignFormToProduct(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9090,8 +11097,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formControllerGetAssignFormToProduct */
   formControllerGetAssignFormToProductAsyncThunk = createAsyncThunk(
     "formControllerGetAssignFormToProduct",
-    async (data: { formId: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.formControllerGetAssignFormToProduct(data.formId, data?.query, data?.params);
+    async (data: {
+      formId: string;
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.formControllerGetAssignFormToProduct(
+        data.formId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9133,8 +11148,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formControllerGetAssignFormToCategory */
   formControllerGetAssignFormToCategoryAsyncThunk = createAsyncThunk(
     "formControllerGetAssignFormToCategory",
-    async (data: { formId: string; query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.formControllerGetAssignFormToCategory(data.formId, data?.query, data?.params);
+    async (data: {
+      formId: string;
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.formControllerGetAssignFormToCategory(
+        data.formId,
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9147,8 +11170,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/form/submision
    * @secure
    */
-  formControllerSubmitFormValues = (data: SubmitFormValueDto, params: RequestParams = {}) =>
-    this.request<SubmitFormResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formControllerSubmitFormValues = (
+    data: SubmitFormValueDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      SubmitFormResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/form/submision`,
       method: "POST",
       body: data,
@@ -9194,26 +11223,36 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<FormSubmissionListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>(
-      {
-        path: `/api/v1/form/submission`,
-        method: "GET",
-        query: query,
-        secure: true,
-        format: "json",
-        ...params,
-      },
-    );
+    this.request<
+      FormSubmissionListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
+      path: `/api/v1/form/submission`,
+      method: "GET",
+      query: query,
+      secure: true,
+      format: "json",
+      ...params,
+    });
 
   /**
    * Redux AsyncThunk for formControllerGetSubmisionForms */
   formControllerGetSubmisionFormsAsyncThunk = createAsyncThunk(
     "formControllerGetSubmisionForms",
     async (data?: {
-      query?: { page?: number; limit?: number; form_id?: string; product_id?: string; tab_id?: string };
+      query?: {
+        page?: number;
+        limit?: number;
+        form_id?: string;
+        product_id?: string;
+        tab_id?: string;
+      };
       params?: RequestParams;
     }) => {
-      return await this.formControllerGetSubmisionForms(data?.query, data?.params);
+      return await this.formControllerGetSubmisionForms(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9226,8 +11265,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/formula
    * @secure
    */
-  formulaControllerCreateFormula = (data: CreateFormulaDto, params: RequestParams = {}) =>
-    this.request<CreateFormulaResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formulaControllerCreateFormula = (
+    data: CreateFormulaDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      CreateFormulaResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/formula`,
       method: "POST",
       body: data,
@@ -9269,7 +11314,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetFormulaListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetFormulaListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/formula`,
       method: "GET",
       query: query,
@@ -9282,8 +11330,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formulaControllerGetListFormula */
   formulaControllerGetListFormulaAsyncThunk = createAsyncThunk(
     "formulaControllerGetListFormula",
-    async (data: { query: { page?: number; limit?: number; form_id: string }; params?: RequestParams }) => {
-      return await this.formulaControllerGetListFormula(data.query, data?.params);
+    async (data: {
+      query: { page?: number; limit?: number; form_id: string };
+      params?: RequestParams;
+    }) => {
+      return await this.formulaControllerGetListFormula(
+        data.query,
+        data?.params,
+      );
     },
   );
 
@@ -9301,7 +11355,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     data: AssignFormulaToFormDto,
     params: RequestParams = {},
   ) =>
-    this.request<AssingFormulaResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      AssingFormulaResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/formula/assign/${formFormulaId}`,
       method: "PATCH",
       body: data,
@@ -9315,8 +11372,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formulaControllerAssignFormulaToForm */
   formulaControllerAssignFormulaToFormAsyncThunk = createAsyncThunk(
     "formulaControllerAssignFormulaToForm",
-    async (data: { formFormulaId: string; data: AssignFormulaToFormDto; params?: RequestParams }) => {
-      return await this.formulaControllerAssignFormulaToForm(data.formFormulaId, data.data, data?.params);
+    async (data: {
+      formFormulaId: string;
+      data: AssignFormulaToFormDto;
+      params?: RequestParams;
+    }) => {
+      return await this.formulaControllerAssignFormulaToForm(
+        data.formFormulaId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9351,8 +11416,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formulaControllerUpdateStatusByForm */
   formulaControllerUpdateStatusByFormAsyncThunk = createAsyncThunk(
     "formulaControllerUpdateStatusByForm",
-    async (data: { status: FORM_FORMULA_TAB_STATUS; data: UpdateFormulaStatusDto; params?: RequestParams }) => {
-      return await this.formulaControllerUpdateStatusByForm(data.status, data.data, data?.params);
+    async (data: {
+      status: FORM_FORMULA_TAB_STATUS;
+      data: UpdateFormulaStatusDto;
+      params?: RequestParams;
+    }) => {
+      return await this.formulaControllerUpdateStatusByForm(
+        data.status,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9365,8 +11438,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/formula/{formula_id}
    * @secure
    */
-  formulaControllerGetDetailFormula = (formulaId: string, params: RequestParams = {}) =>
-    this.request<GetFormulaDetailResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formulaControllerGetDetailFormula = (
+    formulaId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      GetFormulaDetailResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/formula/${formulaId}`,
       method: "GET",
       secure: true,
@@ -9379,7 +11458,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   formulaControllerGetDetailFormulaAsyncThunk = createAsyncThunk(
     "formulaControllerGetDetailFormula",
     async (data: { formulaId: string; params?: RequestParams }) => {
-      return await this.formulaControllerGetDetailFormula(data.formulaId, data?.params);
+      return await this.formulaControllerGetDetailFormula(
+        data.formulaId,
+        data?.params,
+      );
     },
   );
 
@@ -9392,8 +11474,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PATCH:/api/v1/formula/{formula_id}
    * @secure
    */
-  formulaControllerUpdateFormula = (formulaId: string, data: UpdateFormulaBodyDto, params: RequestParams = {}) =>
-    this.request<UpdateFormulaResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formulaControllerUpdateFormula = (
+    formulaId: string,
+    data: UpdateFormulaBodyDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateFormulaResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/formula/${formulaId}`,
       method: "PATCH",
       body: data,
@@ -9407,8 +11496,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for formulaControllerUpdateFormula */
   formulaControllerUpdateFormulaAsyncThunk = createAsyncThunk(
     "formulaControllerUpdateFormula",
-    async (data: { formulaId: string; data: UpdateFormulaBodyDto; params?: RequestParams }) => {
-      return await this.formulaControllerUpdateFormula(data.formulaId, data.data, data?.params);
+    async (data: {
+      formulaId: string;
+      data: UpdateFormulaBodyDto;
+      params?: RequestParams;
+    }) => {
+      return await this.formulaControllerUpdateFormula(
+        data.formulaId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9421,8 +11518,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/formula/{formula_id}
    * @secure
    */
-  formulaControllerDeleteFormula = (formulaId: string, params: RequestParams = {}) =>
-    this.request<DeleteFormulaResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  formulaControllerDeleteFormula = (
+    formulaId: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      DeleteFormulaResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/formula/${formulaId}`,
       method: "DELETE",
       secure: true,
@@ -9435,7 +11538,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   formulaControllerDeleteFormulaAsyncThunk = createAsyncThunk(
     "formulaControllerDeleteFormula",
     async (data: { formulaId: string; params?: RequestParams }) => {
-      return await this.formulaControllerDeleteFormula(data.formulaId, data?.params);
+      return await this.formulaControllerDeleteFormula(
+        data.formulaId,
+        data?.params,
+      );
     },
   );
 
@@ -9460,7 +11566,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetIpgGatewayListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetIpgGatewayListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/ipg-gateway`,
       method: "GET",
       query: query,
@@ -9473,8 +11582,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for ipgGatewayControllerGetIpgGateways */
   ipgGatewayControllerGetIpgGatewaysAsyncThunk = createAsyncThunk(
     "ipgGatewayControllerGetIpgGateways",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.ipgGatewayControllerGetIpgGateways(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.ipgGatewayControllerGetIpgGateways(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9487,7 +11602,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/ipg-gateway
    * @secure
    */
-  ipgGatewayControllerCreateIpgGateway = (data: CreateIpgGatewayDto, params: RequestParams = {}) =>
+  ipgGatewayControllerCreateIpgGateway = (
+    data: CreateIpgGatewayDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetIpgGatewayOmitedResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9506,7 +11624,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   ipgGatewayControllerCreateIpgGatewayAsyncThunk = createAsyncThunk(
     "ipgGatewayControllerCreateIpgGateway",
     async (data: { data: CreateIpgGatewayDto; params?: RequestParams }) => {
-      return await this.ipgGatewayControllerCreateIpgGateway(data.data, data?.params);
+      return await this.ipgGatewayControllerCreateIpgGateway(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9531,7 +11652,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetIpgGatewayListResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetIpgGatewayListResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/ipg-gateway/list`,
       method: "GET",
       query: query,
@@ -9544,8 +11668,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for ipgGatewayControllerGetAdminIpgGateways */
   ipgGatewayControllerGetAdminIpgGatewaysAsyncThunk = createAsyncThunk(
     "ipgGatewayControllerGetAdminIpgGateways",
-    async (data?: { query?: { page?: number; limit?: number }; params?: RequestParams }) => {
-      return await this.ipgGatewayControllerGetAdminIpgGateways(data?.query, data?.params);
+    async (data?: {
+      query?: { page?: number; limit?: number };
+      params?: RequestParams;
+    }) => {
+      return await this.ipgGatewayControllerGetAdminIpgGateways(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9558,7 +11688,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/ipg-gateway/{ipg_gateway_id}
    * @secure
    */
-  ipgGatewayControllerGetIpgGateway = (ipgGatewayId: string, params: RequestParams = {}) =>
+  ipgGatewayControllerGetIpgGateway = (
+    ipgGatewayId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetIpgGatewayOmitedResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9575,7 +11708,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   ipgGatewayControllerGetIpgGatewayAsyncThunk = createAsyncThunk(
     "ipgGatewayControllerGetIpgGateway",
     async (data: { ipgGatewayId: string; params?: RequestParams }) => {
-      return await this.ipgGatewayControllerGetIpgGateway(data.ipgGatewayId, data?.params);
+      return await this.ipgGatewayControllerGetIpgGateway(
+        data.ipgGatewayId,
+        data?.params,
+      );
     },
   );
 
@@ -9610,8 +11746,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for ipgGatewayControllerUpdateIpgGateway */
   ipgGatewayControllerUpdateIpgGatewayAsyncThunk = createAsyncThunk(
     "ipgGatewayControllerUpdateIpgGateway",
-    async (data: { ipgGatewayId: string; data: UpdateIpgGatewayDto; params?: RequestParams }) => {
-      return await this.ipgGatewayControllerUpdateIpgGateway(data.ipgGatewayId, data.data, data?.params);
+    async (data: {
+      ipgGatewayId: string;
+      data: UpdateIpgGatewayDto;
+      params?: RequestParams;
+    }) => {
+      return await this.ipgGatewayControllerUpdateIpgGateway(
+        data.ipgGatewayId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9624,7 +11768,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/ipg-gateway/{ipg_gateway_id}
    * @secure
    */
-  ipgGatewayControllerDeleteIpgGateway = (ipgGatewayId: string, params: RequestParams = {}) =>
+  ipgGatewayControllerDeleteIpgGateway = (
+    ipgGatewayId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetIpgGatewayOmitedResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9641,7 +11788,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   ipgGatewayControllerDeleteIpgGatewayAsyncThunk = createAsyncThunk(
     "ipgGatewayControllerDeleteIpgGateway",
     async (data: { ipgGatewayId: string; params?: RequestParams }) => {
-      return await this.ipgGatewayControllerDeleteIpgGateway(data.ipgGatewayId, data?.params);
+      return await this.ipgGatewayControllerDeleteIpgGateway(
+        data.ipgGatewayId,
+        data?.params,
+      );
     },
   );
 
@@ -9654,7 +11804,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/notifier/gateway
    * @secure
    */
-  notifierControllerCreateNotifierGateway = (data: CreateNotifierGatewayDto, params: RequestParams = {}) =>
+  notifierControllerCreateNotifierGateway = (
+    data: CreateNotifierGatewayDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       CreateNotifierGatewayResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9672,8 +11825,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for notifierControllerCreateNotifierGateway */
   notifierControllerCreateNotifierGatewayAsyncThunk = createAsyncThunk(
     "notifierControllerCreateNotifierGateway",
-    async (data: { data: CreateNotifierGatewayDto; params?: RequestParams }) => {
-      return await this.notifierControllerCreateNotifierGateway(data.data, data?.params);
+    async (data: {
+      data: CreateNotifierGatewayDto;
+      params?: RequestParams;
+    }) => {
+      return await this.notifierControllerCreateNotifierGateway(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9736,7 +11895,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
       };
       params?: RequestParams;
     }) => {
-      return await this.notifierControllerGetListNotifierGateway(data?.query, data?.params);
+      return await this.notifierControllerGetListNotifierGateway(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9771,8 +11933,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for notifierControllerUpdateNotifierGateway */
   notifierControllerUpdateNotifierGatewayAsyncThunk = createAsyncThunk(
     "notifierControllerUpdateNotifierGateway",
-    async (data: { notifierGatewayId: string; data: UpdateBodyNotifierGatewayDto; params?: RequestParams }) => {
-      return await this.notifierControllerUpdateNotifierGateway(data.notifierGatewayId, data.data, data?.params);
+    async (data: {
+      notifierGatewayId: string;
+      data: UpdateBodyNotifierGatewayDto;
+      params?: RequestParams;
+    }) => {
+      return await this.notifierControllerUpdateNotifierGateway(
+        data.notifierGatewayId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9785,7 +11955,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/notifier/gateway{notifier_gateway_id}
    * @secure
    */
-  notifierControllerDeleteNotifierGateway = (notifierGatewayId: string, params: RequestParams = {}) =>
+  notifierControllerDeleteNotifierGateway = (
+    notifierGatewayId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       DeleteNotifierGatewayResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9802,7 +11975,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   notifierControllerDeleteNotifierGatewayAsyncThunk = createAsyncThunk(
     "notifierControllerDeleteNotifierGateway",
     async (data: { notifierGatewayId: string; params?: RequestParams }) => {
-      return await this.notifierControllerDeleteNotifierGateway(data.notifierGatewayId, data?.params);
+      return await this.notifierControllerDeleteNotifierGateway(
+        data.notifierGatewayId,
+        data?.params,
+      );
     },
   );
 
@@ -9815,7 +11991,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/notifier/gateway{notifier_gateway_id}
    * @secure
    */
-  notifierControllerGetDetailNotifierGateway = (notifierGatewayId: string, params: RequestParams = {}) =>
+  notifierControllerGetDetailNotifierGateway = (
+    notifierGatewayId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetDetailNotifierGatewayResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9832,7 +12011,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   notifierControllerGetDetailNotifierGatewayAsyncThunk = createAsyncThunk(
     "notifierControllerGetDetailNotifierGateway",
     async (data: { notifierGatewayId: string; params?: RequestParams }) => {
-      return await this.notifierControllerGetDetailNotifierGateway(data.notifierGatewayId, data?.params);
+      return await this.notifierControllerGetDetailNotifierGateway(
+        data.notifierGatewayId,
+        data?.params,
+      );
     },
   );
 
@@ -9845,7 +12027,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request POST:/api/v1/notifier/template
    * @secure
    */
-  notifierControllerCreateTemplate = (data: CreateNotifierTemplateDto, params: RequestParams = {}) =>
+  notifierControllerCreateTemplate = (
+    data: CreateNotifierTemplateDto,
+    params: RequestParams = {},
+  ) =>
     this.request<
       CreateNotifierTemplateResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9863,8 +12048,14 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for notifierControllerCreateTemplate */
   notifierControllerCreateTemplateAsyncThunk = createAsyncThunk(
     "notifierControllerCreateTemplate",
-    async (data: { data: CreateNotifierTemplateDto; params?: RequestParams }) => {
-      return await this.notifierControllerCreateTemplate(data.data, data?.params);
+    async (data: {
+      data: CreateNotifierTemplateDto;
+      params?: RequestParams;
+    }) => {
+      return await this.notifierControllerCreateTemplate(
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9910,10 +12101,18 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   notifierControllerGetListTemplateNotifierAsyncThunk = createAsyncThunk(
     "notifierControllerGetListTemplateNotifier",
     async (data?: {
-      query?: { page?: number; limit?: number; name?: string; guard_name?: NOTIFIER_METHOD_NAME };
+      query?: {
+        page?: number;
+        limit?: number;
+        name?: string;
+        guard_name?: NOTIFIER_METHOD_NAME;
+      };
       params?: RequestParams;
     }) => {
-      return await this.notifierControllerGetListTemplateNotifier(data?.query, data?.params);
+      return await this.notifierControllerGetListTemplateNotifier(
+        data?.query,
+        data?.params,
+      );
     },
   );
 
@@ -9948,8 +12147,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for notifierControllerUpdateTemplate */
   notifierControllerUpdateTemplateAsyncThunk = createAsyncThunk(
     "notifierControllerUpdateTemplate",
-    async (data: { notifierTemplateId: string; data: UpdateBodyNotifierTemplateDto; params?: RequestParams }) => {
-      return await this.notifierControllerUpdateTemplate(data.notifierTemplateId, data.data, data?.params);
+    async (data: {
+      notifierTemplateId: string;
+      data: UpdateBodyNotifierTemplateDto;
+      params?: RequestParams;
+    }) => {
+      return await this.notifierControllerUpdateTemplate(
+        data.notifierTemplateId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -9962,7 +12169,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request DELETE:/api/v1/notifier/template{notifier_template_id}
    * @secure
    */
-  notifierControllerDeleteTemplate = (notifierTemplateId: string, params: RequestParams = {}) =>
+  notifierControllerDeleteTemplate = (
+    notifierTemplateId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       DeleteNotifierTemplateResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -9979,7 +12189,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   notifierControllerDeleteTemplateAsyncThunk = createAsyncThunk(
     "notifierControllerDeleteTemplate",
     async (data: { notifierTemplateId: string; params?: RequestParams }) => {
-      return await this.notifierControllerDeleteTemplate(data.notifierTemplateId, data?.params);
+      return await this.notifierControllerDeleteTemplate(
+        data.notifierTemplateId,
+        data?.params,
+      );
     },
   );
 
@@ -9992,7 +12205,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request GET:/api/v1/notifier/template{notifier_template_id}
    * @secure
    */
-  notifierControllerGetDetailTemplateNotifier = (notifierTemplateId: string, params: RequestParams = {}) =>
+  notifierControllerGetDetailTemplateNotifier = (
+    notifierTemplateId: string,
+    params: RequestParams = {},
+  ) =>
     this.request<
       GetDetailNotifierTemplateResponseDto,
       BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
@@ -10009,7 +12225,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
   notifierControllerGetDetailTemplateNotifierAsyncThunk = createAsyncThunk(
     "notifierControllerGetDetailTemplateNotifier",
     async (data: { notifierTemplateId: string; params?: RequestParams }) => {
-      return await this.notifierControllerGetDetailTemplateNotifier(data.notifierTemplateId, data?.params);
+      return await this.notifierControllerGetDetailTemplateNotifier(
+        data.notifierTemplateId,
+        data?.params,
+      );
     },
   );
 
@@ -10036,7 +12255,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<GetListNoticResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetListNoticResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/notic`,
       method: "GET",
       query: query,
@@ -10049,7 +12271,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for noticControllerGetNotics */
   noticControllerGetNoticsAsyncThunk = createAsyncThunk(
     "noticControllerGetNotics",
-    async (data?: { query?: { page?: number; limit?: number; user_id?: string }; params?: RequestParams }) => {
+    async (data?: {
+      query?: { page?: number; limit?: number; user_id?: string };
+      params?: RequestParams;
+    }) => {
       return await this.noticControllerGetNotics(data?.query, data?.params);
     },
   );
@@ -10072,7 +12297,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
     },
     params: RequestParams = {},
   ) =>
-    this.request<CreateNoticResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      CreateNoticResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/notic`,
       method: "POST",
       query: query,
@@ -10085,7 +12313,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for noticControllerCreate */
   noticControllerCreateAsyncThunk = createAsyncThunk(
     "noticControllerCreate",
-    async (data: { query: { user_id: string; content: string }; params?: RequestParams }) => {
+    async (data: {
+      query: { user_id: string; content: string };
+      params?: RequestParams;
+    }) => {
       return await this.noticControllerCreate(data.query, data?.params);
     },
   );
@@ -10100,7 +12331,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   noticControllerGetDetail = (noticId: string, params: RequestParams = {}) =>
-    this.request<GetDetailNoticResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      GetDetailNoticResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/notic/${noticId}`,
       method: "GET",
       secure: true,
@@ -10126,8 +12360,15 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @request PUT:/api/v1/notic/{notic_id}
    * @secure
    */
-  noticControllerUpdate = (noticId: string, data: UpdateNoticDto, params: RequestParams = {}) =>
-    this.request<UpdateNoticResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+  noticControllerUpdate = (
+    noticId: string,
+    data: UpdateNoticDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<
+      UpdateNoticResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/notic/${noticId}`,
       method: "PUT",
       body: data,
@@ -10141,8 +12382,16 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * Redux AsyncThunk for noticControllerUpdate */
   noticControllerUpdateAsyncThunk = createAsyncThunk(
     "noticControllerUpdate",
-    async (data: { noticId: string; data: UpdateNoticDto; params?: RequestParams }) => {
-      return await this.noticControllerUpdate(data.noticId, data.data, data?.params);
+    async (data: {
+      noticId: string;
+      data: UpdateNoticDto;
+      params?: RequestParams;
+    }) => {
+      return await this.noticControllerUpdate(
+        data.noticId,
+        data.data,
+        data?.params,
+      );
     },
   );
 
@@ -10156,7 +12405,10 @@ export class Api<SecurityDataType = unknown> extends HttpClient<SecurityDataType
    * @secure
    */
   noticControllerDelete = (noticId: string, params: RequestParams = {}) =>
-    this.request<DeleteNoticResponseDto, BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto>({
+    this.request<
+      DeleteNoticResponseDto,
+      BadRequestResponseDto | UnauthorizedResponseDto | FrobiddenResponseDto
+    >({
       path: `/api/v1/notic/${noticId}`,
       method: "DELETE",
       secure: true,

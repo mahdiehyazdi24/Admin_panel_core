@@ -10,6 +10,561 @@
  * ---------------------------------------------------------------
  */
 
+/** status */
+export enum NOTIFIER_GATEWAY_STATUS {
+  Active = "active",
+  Inactive = "inactive",
+}
+
+/** provider */
+export enum NOTIFIER_GATEWAY_PROVIDER {
+  Kavenegar = "kavenegar",
+}
+
+/** guard name */
+export enum NOTIFIER_METHOD_NAME {
+  Sms = "sms",
+  Email = "email",
+  PushNotification = "push_notification",
+}
+
+export enum FORM_FORMULA_TAB_STATUS {
+  Active = "active",
+  DeActive = "deActive",
+}
+
+/** product fields */
+export enum FORMULA_PRODUCT_FIELD {
+  Price = "price",
+}
+
+/** round type */
+export enum FORMULA_ROUND_TYPE {
+  Round = "round",
+  Floor = "floor",
+  Ceil = "ceil",
+  Truncate = "truncate",
+}
+
+/** type */
+export enum FORM_TAB_ROW_CONTENT_SIZE {
+  H1 = "h1",
+  H2 = "h2",
+  H3 = "h3",
+  H4 = "h4",
+  H5 = "h5",
+  H6 = "h6",
+}
+
+export enum FORM_TAB_ROW_CONTENT_ALERT_TYPE {
+  Info = "info",
+  Success = "success",
+  Warning = "warning",
+  Error = "error",
+}
+
+export enum FORM_TAB_ROW_CONTENT_TYPE {
+  Text = "text",
+  Title = "title",
+  Alert = "alert",
+  Link = "link",
+}
+
+export enum FORM_CONTENT_HEADING_TYPE {
+  H1 = "h1",
+  H2 = "h2",
+  H3 = "h3",
+  H4 = "h4",
+  H5 = "h5",
+  H6 = "h6",
+}
+
+export enum RSS_FILE_NAME {
+  ProductXml = "product.xml",
+  BlogXml = "blog.xml",
+}
+
+export enum SETTING_TYPE {
+  GeneralSetting = "general_setting",
+  Seo = "seo",
+}
+
+export enum FileQueryType {
+  FileId = "file_id",
+  Name = "name",
+}
+
+/** File Type */
+export enum FILE_TYPE {
+  Product = "product",
+  Avatar = "avatar",
+  AppleId = "apple_id",
+  AppleIdExcel = "apple_id_excel",
+  Setting = "setting",
+  Flag = "flag",
+  Blog = "blog",
+  IpgGateway = "ipg_gateway",
+}
+
+/** Type */
+export enum TYPE_QUERY_VALIDATION {
+  Specific = "specific",
+  Group = "group",
+}
+
+export enum TAG_STATUS {
+  Active = "active",
+  DeActive = "deActive",
+}
+
+export enum TimerLogOrderBy {
+  Seconds = "seconds",
+}
+
+export enum TimerLogGroupByFields {
+  ProductId = "product_id",
+  ProductCategoryId = "product_category_id",
+  UserId = "user_id",
+  OrderId = "order_id",
+}
+
+export enum TimerDashboardFilterType {
+  Today = "today",
+  Weekly = "weekly",
+  Monthly = "monthly",
+  Yearly = "yearly",
+}
+
+export enum OrderBy {
+  PaymentAmount = "payment_amount",
+  ProductCount = "product_count",
+}
+
+export enum GroupByFields {
+  ProductId = "product_id",
+  CategoryId = "category_id",
+  UserId = "user_id",
+}
+
+/** Status */
+export enum CONTACT_US_STATUS {
+  Pending = "pending",
+  Checking = "checking",
+  Checked = "checked",
+}
+
+export enum POST_TYPE {
+  Blog = "blog",
+  News = "news",
+}
+
+export enum POST_STATUS {
+  Active = "active",
+  DeActive = "deActive",
+}
+
+export enum CATEGORY_STATUS {
+  Active = "active",
+  DeActive = "deActive",
+}
+
+export enum COMMENT_STATUS {
+  Pending = "pending",
+  Approve = "approve",
+  Denied = "denied",
+}
+
+export enum COMMENT_TYPE {
+  Post = "post",
+  Product = "product",
+}
+
+/** gateway */
+export enum WALLET_TRANSACTION_GATEWAY {
+  ADMIN = "ADMIN",
+  PAYSTAR = "PAYSTAR",
+  ZIBAL = "ZIBAL",
+  PRODUCT = "PRODUCT",
+}
+
+export enum EScrapeState {
+  Value0 = 0,
+  Value1 = 1,
+  Value2 = 2,
+  Value3 = 3,
+  Value4 = 4,
+}
+
+/** status */
+export enum EProcessState {
+  Queued = "Queued",
+  OrderChange = "OrderChange",
+  Starting = "Starting",
+  PageLoaded = "PageLoaded",
+  ValidEmail = "ValidEmail",
+  Dashboard = "Dashboard",
+  AuthenticateAccepted = "AuthenticateAccepted",
+  StartChangeProfile = "StartChangeProfile",
+  CompleteChangeProfile = "CompleteChangeProfile",
+  StartValidateEmail = "StartValidateEmail",
+  StartChangeEmail = "StartChangeEmail",
+  PushCode = "PushCode",
+  CompleteChangeEmail = "CompleteChangeEmail",
+  StartChangePassword = "StartChangePassword",
+  CompleteChangePassword = "CompleteChangePassword",
+  StartChangeSecurityAnswers = "StartChangeSecurityAnswers",
+  CompleteChangeSecurityAnswers = "CompleteChangeSecurityAnswers",
+  InvalidMessageFormat = "InvalidMessageFormat",
+  CompleteScrape = "CompleteScrape",
+  VerifyCodeTimeout = "VerifyCodeTimeout",
+  InvalidEmail = "InvalidEmail",
+  InvalidCode = "InvalidCode",
+  ExceptionError = "ExceptionError",
+}
+
+export enum APPLEID_AUDIT_ACTION_TYPE {
+  Add = "add",
+  Remove = "remove",
+  Update = "update",
+}
+
+export enum APPLEID_COUNTRY {
+  Afghanistan = "Afghanistan",
+  Albania = "Albania",
+  Algeria = "Algeria",
+  Angola = "Angola",
+  Anguilla = "Anguilla",
+  AntiguaAndBarbuda = "Antigua And Barbuda",
+  Argentina = "Argentina",
+  Armenia = "Armenia",
+  Australia = "Australia",
+  Austria = "Austria",
+  Azerbaijan = "Azerbaijan",
+  Bahamas = "Bahamas",
+  Bahrain = "Bahrain",
+  Bangladesh = "Bangladesh",
+  Barbados = "Barbados",
+  Belarus = "Belarus",
+  Belgium = "Belgium",
+  Belize = "Belize",
+  Benin = "Benin",
+  Bermuda = "Bermuda",
+  Bhutan = "Bhutan",
+  Bolivia = "Bolivia",
+  BosniaAndHerzegovina = "Bosnia and Herzegovina",
+  Botswana = "Botswana",
+  Brazil = "Brazil",
+  BritishVirginIslands = "British Virgin Islands",
+  BruneiDarussalam = "Brunei Darussalam",
+  Bulgaria = "Bulgaria",
+  BurkinaFaso = "Burkina Faso",
+  Cambodia = "Cambodia",
+  Canada = "Canada",
+  Cameroon = "Cameroon",
+  CapeVerde = "Cape Verde",
+  CaymanIslands = "Cayman Islands",
+  Chad = "Chad",
+  Chile = "Chile",
+  China = "China",
+  Colombia = "Colombia",
+  CostaRica = "Costa Rica",
+  CoteDIvoire = "Côte d'Ivoire",
+  Croatia = "Croatia",
+  Cyprus = "Cyprus",
+  Czechia = "Czechia",
+  DemocraticRepublicOfTheCongo = "Democratic Republic of the Congo",
+  Denmark = "Denmark",
+  Dominica = "Dominica",
+  DominicanRepublic = "Dominican Republic",
+  Ecuador = "Ecuador",
+  Egypt = "Egypt",
+  ElSalvador = "El Salvador",
+  Estonia = "Estonia",
+  Eswatini = "Eswatini",
+  Fiji = "Fiji",
+  Finland = "Finland",
+  France = "France",
+  Gabon = "Gabon",
+  Gambia = "Gambia",
+  Georgia = "Georgia",
+  Germany = "Germany",
+  Ghana = "Ghana",
+  Greece = "Greece",
+  Grenada = "Grenada",
+  Guatemala = "Guatemala",
+  GuineaBissau = "Guinea-Bissau",
+  Guyana = "Guyana",
+  Honduras = "Honduras",
+  HongKong = "Hong Kong",
+  Hungary = "Hungary",
+  Iceland = "Iceland",
+  India = "India",
+  Indonesia = "Indonesia",
+  Iraq = "Iraq",
+  Ireland = "Ireland",
+  Israel = "Israel",
+  Italy = "Italy",
+  Jamaica = "Jamaica",
+  Japan = "Japan",
+  Jordan = "Jordan",
+  Kazakhstan = "Kazakhstan",
+  Kenya = "Kenya",
+  Kosovo = "Kosovo",
+  Kuwait = "Kuwait",
+  Kyrgyzstan = "Kyrgyzstan",
+  Laos = "Laos",
+  Latvia = "Latvia",
+  Lebanon = "Lebanon",
+  Liberia = "Liberia",
+  Libya = "Libya",
+  Lithuania = "Lithuania",
+  Luxembourg = "Luxembourg",
+  Macao = "Macao",
+  Madagascar = "Madagascar",
+  Malawi = "Malawi",
+  Malaysia = "Malaysia",
+  Maldives = "Maldives",
+  Mali = "Mali",
+  Malta = "Malta",
+  Mauritania = "Mauritania",
+  Mauritius = "Mauritius",
+  Mexico = "Mexico",
+  Micronesia = "Micronesia",
+  Moldova = "Moldova",
+  Mongolia = "Mongolia",
+  Montenegro = "Montenegro",
+  Montserrat = "Montserrat",
+  Morocco = "Morocco",
+  Mozambique = "Mozambique",
+  Myanmar = "Myanmar",
+  Namibia = "Namibia",
+  Nauru = "Nauru",
+  Nepal = "Nepal",
+  Netherlands = "Netherlands",
+  NewZealand = "New Zealand",
+  Nicaragua = "Nicaragua",
+  Niger = "Niger",
+  Nigeria = "Nigeria",
+  NorthMacedonia = "North Macedonia",
+  Norway = "Norway",
+  Oman = "Oman",
+  Pakistan = "Pakistan",
+  Palau = "Palau",
+  Panama = "Panama",
+  PapuaNewGuinea = "Papua New Guinea",
+  Paraguay = "Paraguay",
+  Peru = "Peru",
+  Philippines = "Philippines",
+  Poland = "Poland",
+  Portugal = "Portugal",
+  Qatar = "Qatar",
+  RepublicOfTheCongo = "Republic of the Congo",
+  Romania = "Romania",
+  Russia = "Russia",
+  Rwanda = "Rwanda",
+  SaintKittsAndNevis = "Saint Kitts And Nevis",
+  SaintLucia = "Saint Lucia",
+  SaintVincentAndTheGrenadines = "Saint Vincent and the Grenadines",
+  SaoTomeAndPrincipe = "Sao Tome And Principe",
+  SaudiArabia = "Saudi Arabia",
+  Senegal = "Senegal",
+  Serbia = "Serbia",
+  Seychelles = "Seychelles",
+  SierraLeone = "Sierra Leone",
+  Singapore = "Singapore",
+  Slovakia = "Slovakia",
+  Slovenia = "Slovenia",
+  SolomonIslands = "Solomon Islands",
+  SouthAfrica = "South Africa",
+  SouthKorea = "South Korea",
+  Spain = "Spain",
+  SriLanka = "Sri Lanka",
+  Suriname = "Suriname",
+  Sweden = "Sweden",
+  Switzerland = "Switzerland",
+  Taiwan = "Taiwan",
+  Tajikistan = "Tajikistan",
+  Tanzania = "Tanzania",
+  Thailand = "Thailand",
+  Tonga = "Tonga",
+  TrinidadAndTobago = "Trinidad and Tobago",
+  Tunisia = "Tunisia",
+  Turkmenistan = "Turkmenistan",
+  Turkey = "Turkey",
+  TurksAndCaicosIslands = "Turks and Caicos Islands",
+  Uganda = "Uganda",
+  Ukraine = "Ukraine",
+  UnitedArabEmirates = "United Arab Emirates",
+  UnitedKingdom = "United Kingdom",
+  UnitedStates = "United States",
+  Uruguay = "Uruguay",
+  Uzbekistan = "Uzbekistan",
+  Vanuatu = "Vanuatu",
+  Venezuela = "Venezuela",
+  Vietnam = "Vietnam",
+  Yemen = "Yemen",
+  Zambia = "Zambia",
+  Zimbabwe = "Zimbabwe",
+}
+
+export enum ALERT_STATUS {
+  Active = "active",
+  DeActive = "deActive",
+}
+
+export enum ALERT_ACCESS {
+  Guest = "guest",
+  Authenticated = "authenticated",
+}
+
+export enum ALERT_VISIBE {
+  Category = "category",
+  Product = "product",
+}
+
+export enum ALERT_POSITION {
+  Top = "top",
+  Bottom = "bottom",
+  Left = "left",
+  Right = "right",
+}
+
+export enum ALERT_TYPE {
+  Alert = "alert",
+  Successful = "successful",
+  Notification = "notification",
+  Warning = "warning",
+}
+
+export enum REWARD_TYPE {
+  Price = "price",
+  Wallet = "wallet",
+}
+
+export enum OFFER_TYPE {
+  Specific = "specific",
+  Group = "group",
+}
+
+/** status */
+export enum TIMER_MANAGMENT_STATUS {
+  Pending = "pending",
+  Approve = "approve",
+  Denied = "denied",
+}
+
+export enum SortOrder {
+  Asc = "asc",
+  Desc = "desc",
+}
+
+export enum TIMER_ACTION_TYPE {
+  Viewed = "viewed",
+  Acted = "acted",
+  NoActed = "no_acted",
+}
+
+export enum LABEL_STATUS {
+  Protected = "protected",
+  Admin = "admin",
+}
+
+export enum OrderDownloadType {
+  Image = "image",
+  Text = "text",
+  Zip = "zip",
+}
+
+export enum PrismaSortOrder {
+  Asc = "asc",
+  Desc = "desc",
+}
+
+export enum TRANSACTION_STATUS {
+  Pending = "pending",
+  Success = "success",
+  Failed = "failed",
+}
+
+export enum PAYMENT_GATEWAY {
+  Online = "online",
+  Wallet = "wallet",
+}
+
+export enum TRANSACTION_GATEWAY {
+  Paystar = "paystar",
+  Zibal = "zibal",
+}
+
+export enum APPLEID_CLIENT_EDIT_STATE {
+  ProfileData = "profile_data",
+  Email = "email",
+  AppleidPassword = "appleid_password",
+  SecurityQuestions = "security_questions",
+}
+
+export enum SCRAPER_ADMIN_STATES {
+  Retry = "retry",
+  ChangeEmail = "change_email",
+  PushCode = "push_code",
+}
+
+export enum PRODUCT_STATUS {
+  Unpaid = "unpaid",
+  OnlinePayment = "online_payment",
+  TransferToWallet = "transfer_to_wallet",
+  Canceled = "canceled",
+  Archived = "archived",
+  CustomerNoResponse = "customer_no_response",
+  IncorrectInfo = "incorrect_info",
+  ReadyForDelivery = "ready_for_delivery",
+  InProgress = "in_progress",
+  Completed = "completed",
+  UnderReview = "under_review",
+  GetInfo = "get_info",
+  ScraperFail = "scraper_fail",
+}
+
+export enum PURCHASE_STATUS {
+  Purchased = "purchased",
+  NotPurchased = "not_purchased",
+}
+
+export enum ORDER_NOTE_TARGET {
+  Admin = "admin",
+  Client = "client",
+}
+
+export enum ORDER_NOTE_TYPE {
+  Admin = "admin",
+  System = "system",
+}
+
+/** Type of the product category */
+export enum PRODUCT_TYPE {
+  PersonalInfo = "personal_info",
+  NotActive = "not_active",
+  CountryBased = "country_based",
+  Card = "card",
+}
+
+/** Assign Type */
+export enum ASSIGN_TYPE {
+  Automated = "automated",
+  Manual = "manual",
+  Unassignable = "unassignable",
+}
+
+export enum TRANSACTION_CAUSE {
+  Product = "product",
+  Wallet = "wallet",
+}
+
+export enum VERIFY_TYPE {
+  Wallet = "wallet",
+  Product = "product",
+}
+
 export interface LoginResponseDto {
   accessToken: string;
   refreshToken: string;
@@ -414,11 +969,6 @@ export interface VerifyTransactionDto {
   tracking_code?: string;
 }
 
-export enum VERIFY_TYPE {
-  Wallet = "wallet",
-  Product = "product",
-}
-
 export interface IpgGatewayNameDto {
   name: string;
 }
@@ -792,11 +1342,6 @@ export interface GetTransactionDetailForUserResponseDto {
   firstPayment?: string | null;
 }
 
-export enum TRANSACTION_CAUSE {
-  Product = "product",
-  Wallet = "wallet",
-}
-
 export interface ElementInputDto {
   element_id: string;
   name: string;
@@ -935,14 +1480,6 @@ export interface WalletTransactionWithoutRelationDto {
    * @format date-time
    */
   updated_at: string;
-}
-
-/** Type of the product category */
-export enum PRODUCT_TYPE {
-  PersonalInfo = "personal_info",
-  NotActive = "not_active",
-  CountryBased = "country_based",
-  Card = "card",
 }
 
 export interface CountryQuestionDetailResponseDto {
@@ -1136,6 +1673,16 @@ export interface ProductInOrderDto {
    */
   is_auto_slug: boolean;
   /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
+  /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
    */
@@ -1285,16 +1832,6 @@ export interface GetUserOrdersResponseDto {
    */
   hasPrevPage?: boolean;
   orders: OrderWithoutAppleIdsDto[];
-}
-
-export enum ORDER_NOTE_TYPE {
-  Admin = "admin",
-  System = "system",
-}
-
-export enum ORDER_NOTE_TARGET {
-  Admin = "admin",
-  Client = "client",
 }
 
 export interface NoteResponseWithRelationDto {
@@ -1521,27 +2058,6 @@ export interface GetOrderLabelAssignResponseDto {
   orders: OrderWithoutResponseDto;
 }
 
-export enum PURCHASE_STATUS {
-  Purchased = "purchased",
-  NotPurchased = "not_purchased",
-}
-
-export enum PRODUCT_STATUS {
-  Unpaid = "unpaid",
-  OnlinePayment = "online_payment",
-  TransferToWallet = "transfer_to_wallet",
-  Canceled = "canceled",
-  Archived = "archived",
-  CustomerNoResponse = "customer_no_response",
-  IncorrectInfo = "incorrect_info",
-  ReadyForDelivery = "ready_for_delivery",
-  InProgress = "in_progress",
-  Completed = "completed",
-  UnderReview = "under_review",
-  GetInfo = "get_info",
-  ScraperFail = "scraper_fail",
-}
-
 export interface SecurityQuestionWithoutUserResponseDto {
   /**
    * Unique identifier for the security question
@@ -1628,6 +2144,14 @@ export interface AppleIdInOrderDetailDetail {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -1701,13 +2225,6 @@ export interface SecurityQuestionDto {
    * @example "string"
    */
   answer: string;
-}
-
-export enum APPLEID_CLIENT_EDIT_STATE {
-  ProfileData = "profile_data",
-  Email = "email",
-  AppleidPassword = "appleid_password",
-  SecurityQuestions = "security_questions",
 }
 
 export interface AppleIdEditScopeDto {
@@ -1896,6 +2413,16 @@ export interface ProductResponseDto {
    */
   is_auto_slug: boolean;
   /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
+  /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
    */
@@ -2002,6 +2529,16 @@ export interface ProductResponseWithoutSuggest {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -2263,6 +2800,14 @@ export interface AppleIDResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -2318,27 +2863,6 @@ export interface FollowUpOrderResponseDto {
   tracker: UserForAdminResponseDto;
 }
 
-export enum TRANSACTION_GATEWAY {
-  Paystar = "paystar",
-  Zibal = "zibal",
-}
-
-export enum PAYMENT_GATEWAY {
-  Online = "online",
-  Wallet = "wallet",
-}
-
-export enum TRANSACTION_STATUS {
-  Pending = "pending",
-  Success = "success",
-  Failed = "failed",
-}
-
-export enum PrismaSortOrder {
-  Asc = "asc",
-  Desc = "desc",
-}
-
 export interface OrderLabelDto {
   /** Label Ids */
   label_ids: string[];
@@ -2347,12 +2871,6 @@ export interface OrderLabelDto {
 export interface OrderUpdateStatusDto {
   /** Status */
   status: PRODUCT_STATUS;
-}
-
-export enum OrderDownloadType {
-  Image = "image",
-  Text = "text",
-  Zip = "zip",
 }
 
 export interface QuestionDto {
@@ -2724,6 +3242,14 @@ export interface AppleIdAuditTimerResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   /**
@@ -2920,24 +3446,6 @@ export interface TimerStopTimerTrackerResponseDto {
   order: TimerStopOrderDto;
   product: TimerStopProductDto;
   product_category: TimerStopProductCategoryDto;
-}
-
-export enum TIMER_ACTION_TYPE {
-  Viewed = "viewed",
-  Acted = "acted",
-  NoActed = "no_acted",
-}
-
-export enum SortOrder {
-  Asc = "asc",
-  Desc = "desc",
-}
-
-/** status */
-export enum TIMER_MANAGMENT_STATUS {
-  Pending = "pending",
-  Approve = "approve",
-  Denied = "denied",
 }
 
 export interface GetTimerRequestListDto {
@@ -3248,16 +3756,6 @@ export interface UpdateFAQDto {
   is_chosen?: boolean;
 }
 
-export enum OFFER_TYPE {
-  Specific = "specific",
-  Group = "group",
-}
-
-export enum REWARD_TYPE {
-  Price = "price",
-  Wallet = "wallet",
-}
-
 export interface OfferResponseDto {
   offer_id: string;
   title: string;
@@ -3331,6 +3829,16 @@ export interface ProductWithOfferResponseDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -3502,6 +4010,16 @@ export interface GetProductByIdResponseDto {
    */
   is_auto_slug: boolean;
   /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
+  /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
    */
@@ -3622,6 +4140,16 @@ export interface CreateProductResponseDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -3757,6 +4285,16 @@ export interface DeleteProductResponseDto {
    */
   is_auto_slug: boolean;
   /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
+  /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
    */
@@ -3862,6 +4400,16 @@ export interface ProductResponseWithoutDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -4008,6 +4556,16 @@ export interface UpdateProductResponseDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -4185,6 +4743,16 @@ export interface AlertProductResponseWithoutSuggestCategory {
    */
   is_auto_slug: boolean;
   /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
+  /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
    */
@@ -4270,35 +4838,6 @@ export interface AlertProductResponseWithoutSuggestCategory {
    * @example "2024-12-30T11:57:12.482Z"
    */
   updated_at: string;
-}
-
-export enum ALERT_TYPE {
-  Alert = "alert",
-  Successful = "successful",
-  Notification = "notification",
-  Warning = "warning",
-}
-
-export enum ALERT_POSITION {
-  Top = "top",
-  Bottom = "bottom",
-  Left = "left",
-  Right = "right",
-}
-
-export enum ALERT_VISIBE {
-  Category = "category",
-  Product = "product",
-}
-
-export enum ALERT_ACCESS {
-  Guest = "guest",
-  Authenticated = "authenticated",
-}
-
-export enum ALERT_STATUS {
-  Active = "active",
-  DeActive = "deActive",
 }
 
 export interface AlertResponseDto {
@@ -4433,6 +4972,16 @@ export interface CreateProductDto {
   features?: string;
   /** Is Suggest */
   is_suggest: boolean;
+  /**
+   * Pre Order
+   * @default false
+   */
+  pre_order?: boolean;
+  /**
+   * Assign Type
+   * @default "manual"
+   */
+  assign_type?: ASSIGN_TYPE;
   /** Appleid Category Id */
   category_id: string;
   /** Product File Id */
@@ -4467,189 +5016,20 @@ export interface UpdateProductDto {
   features?: string;
   /** Is Suggest */
   is_suggest?: boolean;
+  /**
+   * Pre Order
+   * @default false
+   */
+  pre_order?: boolean;
+  /**
+   * Assign Type
+   * @default "manual"
+   */
+  assign_type?: ASSIGN_TYPE;
   /** Appleid Category Id */
   category_id?: string;
   /** Product File Id */
   file_id?: string;
-}
-
-export enum APPLEID_COUNTRY {
-  Afghanistan = "Afghanistan",
-  Albania = "Albania",
-  Algeria = "Algeria",
-  Angola = "Angola",
-  Anguilla = "Anguilla",
-  AntiguaAndBarbuda = "Antigua And Barbuda",
-  Argentina = "Argentina",
-  Armenia = "Armenia",
-  Australia = "Australia",
-  Austria = "Austria",
-  Azerbaijan = "Azerbaijan",
-  Bahamas = "Bahamas",
-  Bahrain = "Bahrain",
-  Bangladesh = "Bangladesh",
-  Barbados = "Barbados",
-  Belarus = "Belarus",
-  Belgium = "Belgium",
-  Belize = "Belize",
-  Benin = "Benin",
-  Bermuda = "Bermuda",
-  Bhutan = "Bhutan",
-  Bolivia = "Bolivia",
-  BosniaAndHerzegovina = "Bosnia and Herzegovina",
-  Botswana = "Botswana",
-  Brazil = "Brazil",
-  BritishVirginIslands = "British Virgin Islands",
-  BruneiDarussalam = "Brunei Darussalam",
-  Bulgaria = "Bulgaria",
-  BurkinaFaso = "Burkina Faso",
-  Cambodia = "Cambodia",
-  Canada = "Canada",
-  Cameroon = "Cameroon",
-  CapeVerde = "Cape Verde",
-  CaymanIslands = "Cayman Islands",
-  Chad = "Chad",
-  Chile = "Chile",
-  China = "China",
-  Colombia = "Colombia",
-  CostaRica = "Costa Rica",
-  CoteDIvoire = "Côte d'Ivoire",
-  Croatia = "Croatia",
-  Cyprus = "Cyprus",
-  Czechia = "Czechia",
-  DemocraticRepublicOfTheCongo = "Democratic Republic of the Congo",
-  Denmark = "Denmark",
-  Dominica = "Dominica",
-  DominicanRepublic = "Dominican Republic",
-  Ecuador = "Ecuador",
-  Egypt = "Egypt",
-  ElSalvador = "El Salvador",
-  Estonia = "Estonia",
-  Eswatini = "Eswatini",
-  Fiji = "Fiji",
-  Finland = "Finland",
-  France = "France",
-  Gabon = "Gabon",
-  Gambia = "Gambia",
-  Georgia = "Georgia",
-  Germany = "Germany",
-  Ghana = "Ghana",
-  Greece = "Greece",
-  Grenada = "Grenada",
-  Guatemala = "Guatemala",
-  GuineaBissau = "Guinea-Bissau",
-  Guyana = "Guyana",
-  Honduras = "Honduras",
-  HongKong = "Hong Kong",
-  Hungary = "Hungary",
-  Iceland = "Iceland",
-  India = "India",
-  Indonesia = "Indonesia",
-  Iraq = "Iraq",
-  Ireland = "Ireland",
-  Israel = "Israel",
-  Italy = "Italy",
-  Jamaica = "Jamaica",
-  Japan = "Japan",
-  Jordan = "Jordan",
-  Kazakhstan = "Kazakhstan",
-  Kenya = "Kenya",
-  Kosovo = "Kosovo",
-  Kuwait = "Kuwait",
-  Kyrgyzstan = "Kyrgyzstan",
-  Laos = "Laos",
-  Latvia = "Latvia",
-  Lebanon = "Lebanon",
-  Liberia = "Liberia",
-  Libya = "Libya",
-  Lithuania = "Lithuania",
-  Luxembourg = "Luxembourg",
-  Macao = "Macao",
-  Madagascar = "Madagascar",
-  Malawi = "Malawi",
-  Malaysia = "Malaysia",
-  Maldives = "Maldives",
-  Mali = "Mali",
-  Malta = "Malta",
-  Mauritania = "Mauritania",
-  Mauritius = "Mauritius",
-  Mexico = "Mexico",
-  Micronesia = "Micronesia",
-  Moldova = "Moldova",
-  Mongolia = "Mongolia",
-  Montenegro = "Montenegro",
-  Montserrat = "Montserrat",
-  Morocco = "Morocco",
-  Mozambique = "Mozambique",
-  Myanmar = "Myanmar",
-  Namibia = "Namibia",
-  Nauru = "Nauru",
-  Nepal = "Nepal",
-  Netherlands = "Netherlands",
-  NewZealand = "New Zealand",
-  Nicaragua = "Nicaragua",
-  Niger = "Niger",
-  Nigeria = "Nigeria",
-  NorthMacedonia = "North Macedonia",
-  Norway = "Norway",
-  Oman = "Oman",
-  Pakistan = "Pakistan",
-  Palau = "Palau",
-  Panama = "Panama",
-  PapuaNewGuinea = "Papua New Guinea",
-  Paraguay = "Paraguay",
-  Peru = "Peru",
-  Philippines = "Philippines",
-  Poland = "Poland",
-  Portugal = "Portugal",
-  Qatar = "Qatar",
-  RepublicOfTheCongo = "Republic of the Congo",
-  Romania = "Romania",
-  Russia = "Russia",
-  Rwanda = "Rwanda",
-  SaintKittsAndNevis = "Saint Kitts And Nevis",
-  SaintLucia = "Saint Lucia",
-  SaintVincentAndTheGrenadines = "Saint Vincent and the Grenadines",
-  SaoTomeAndPrincipe = "Sao Tome And Principe",
-  SaudiArabia = "Saudi Arabia",
-  Senegal = "Senegal",
-  Serbia = "Serbia",
-  Seychelles = "Seychelles",
-  SierraLeone = "Sierra Leone",
-  Singapore = "Singapore",
-  Slovakia = "Slovakia",
-  Slovenia = "Slovenia",
-  SolomonIslands = "Solomon Islands",
-  SouthAfrica = "South Africa",
-  SouthKorea = "South Korea",
-  Spain = "Spain",
-  SriLanka = "Sri Lanka",
-  Suriname = "Suriname",
-  Sweden = "Sweden",
-  Switzerland = "Switzerland",
-  Taiwan = "Taiwan",
-  Tajikistan = "Tajikistan",
-  Tanzania = "Tanzania",
-  Thailand = "Thailand",
-  Tonga = "Tonga",
-  TrinidadAndTobago = "Trinidad and Tobago",
-  Tunisia = "Tunisia",
-  Turkmenistan = "Turkmenistan",
-  Turkey = "Turkey",
-  TurksAndCaicosIslands = "Turks and Caicos Islands",
-  Uganda = "Uganda",
-  Ukraine = "Ukraine",
-  UnitedArabEmirates = "United Arab Emirates",
-  UnitedKingdom = "United Kingdom",
-  UnitedStates = "United States",
-  Uruguay = "Uruguay",
-  Uzbekistan = "Uzbekistan",
-  Vanuatu = "Vanuatu",
-  Venezuela = "Venezuela",
-  Vietnam = "Vietnam",
-  Yemen = "Yemen",
-  Zambia = "Zambia",
-  Zimbabwe = "Zimbabwe",
 }
 
 export interface AlertProductCategoryResponseDto {
@@ -4773,6 +5153,16 @@ export interface ProductAlertResponseDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -5226,6 +5616,14 @@ export interface AppleIdResponseWithoutUserDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5300,6 +5698,14 @@ export interface AppleIdResponseWithRelationDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5372,6 +5778,14 @@ export interface AppleIdLogResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5489,6 +5903,14 @@ export interface AppleIdLogsResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5565,6 +5987,14 @@ export interface UpdateAppleIdResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5635,6 +6065,14 @@ export interface DeleteAppleIdResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5705,6 +6143,14 @@ export interface AppleIdGetDetailResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5779,6 +6225,14 @@ export interface AppleIdAuditResponseDto {
    * @example "67cf151ac2a7c640886d2b28"
    */
   order_id: string;
+  scraper_process_id: string;
+  scraper_retry_count: number;
+  scraper_in_queue: boolean;
+  scraper_can_run: boolean;
+  /** @default [] */
+  scraper_states: SCRAPER_ADMIN_STATES;
+  /** @format date-time */
+  scraper_start_at: string;
   /** @example "personal_info" */
   type: PRODUCT_TYPE;
   country: CountryResponseDto;
@@ -5952,12 +6406,6 @@ export interface UpdateAppleIdWithStateDto {
   scope?: APPLEID_CLIENT_EDIT_STATE;
 }
 
-export enum APPLEID_AUDIT_ACTION_TYPE {
-  Add = "add",
-  Remove = "remove",
-  Update = "update",
-}
-
 export interface SecurityQuestionsDetailDto {
   /** Detail security questions */
   question: SecurityQuestionResponseDto;
@@ -5981,34 +6429,9 @@ export interface QuestionUpdateDto {
   priority: number;
 }
 
-/** status */
-export enum EProcessState {
-  Queued = "Queued",
-  OrderChange = "OrderChange",
-  Starting = "Starting",
-  PageLoaded = "PageLoaded",
-  ValidEmail = "ValidEmail",
-  Dashboard = "Dashboard",
-  AuthenticateAccepted = "AuthenticateAccepted",
-  StartChangeProfile = "StartChangeProfile",
-  CompleteChangeProfile = "CompleteChangeProfile",
-  StartValidateEmail = "StartValidateEmail",
-  StartChangeEmail = "StartChangeEmail",
-  PushCode = "PushCode",
-  CompleteChangeEmail = "CompleteChangeEmail",
-  StartChangePassword = "StartChangePassword",
-  CompleteChangePassword = "CompleteChangePassword",
-  StartChangeSecurityAnswers = "StartChangeSecurityAnswers",
-  CompleteChangeSecurityAnswers = "CompleteChangeSecurityAnswers",
-  InvalidMessageFormat = "InvalidMessageFormat",
-  CompleteScrape = "CompleteScrape",
-  VerifyCodeTimeout = "VerifyCodeTimeout",
-  InvalidEmail = "InvalidEmail",
-  InvalidCode = "InvalidCode",
-  ExceptionError = "ExceptionError",
-}
-
 export interface ScraperValidateEmailResponseDto {
+  /** orderId */
+  orderId: string;
   /** status */
   status: EProcessState;
 }
@@ -6027,55 +6450,107 @@ export interface ScraperUserIdResponseDto {
   id: string;
   /** estimatedTime */
   estimatedTime: number;
+  /** retryCount */
+  retryCount?: number;
+  /** onQueue */
+  onQueue?: boolean;
   /** error */
-  error: ScraperErrorMsgDto;
+  error?: ScraperErrorMsgDto;
 }
 
 export interface ScraperUserIdsResponseDto {
-  list: ScraperUserIdResponseDto;
+  list: ScraperUserIdResponseDto[];
 }
 
 export interface StartScraperDto {
   /** Order Id */
   order_id: string;
-  /** birth day */
-  birthDay: number;
-  /** birth month */
-  birthMonth: number;
-  /** birth year */
-  birthYear: number;
   /** email */
   email: string;
+  /** birth day */
+  birthDay?: number;
+  /** birth month */
+  birthMonth?: number;
+  /** birth year */
+  birthYear?: number;
   /** family */
-  family: string;
+  family?: string;
   /** name */
-  name: string;
+  name?: string;
   /** password */
-  password: string;
+  password?: string;
   /**
    * Question items (array of 3 numbers between 0 and 5)
    * @example [3,4,2]
    */
-  questionItems: number[];
+  questionItems?: number[];
   /**
    * first question answer
    * @example "string"
    */
-  answerOne: string;
+  securityAnswerOne?: string;
   /**
    * second question answer
    * @example "string"
    */
-  answerTwo: string;
+  securityAnswerTwo?: string;
   /**
    * thired question answer
    * @example "string"
    */
-  answerThree: string;
+  securityAnswerThree?: string;
 }
 
 export interface PublishCodeScraperResponseDto {
   is_success: boolean;
+}
+
+export interface GetStatusJobResponseDto {
+  id: string;
+  name: string;
+  queueQualifiedName: string;
+  /** @example 0 */
+  progress: number;
+  /** @example 2000 */
+  delay: number;
+  /** @example 1 */
+  priority: number;
+  attemptsStarted: number;
+  attemptsMade: number;
+  stalledCounter: number;
+  /**
+   * Job creation time (int64 stored as string)
+   * @example "1717695690123"
+   */
+  timestamp: string;
+  /**
+   * Job finish time (int64 stored as string)
+   * @example "1717695890450"
+   */
+  finishedOn: string;
+  /**
+   * Job processed time (int64 stored as string)
+   * @example "1717695700000"
+   */
+  processedOn: string;
+  /** @example {"foo":"bar","type":"email"} */
+  data: Record<string, string>;
+  /** @example {"attempts":"3","backoff":"5000"} */
+  opts: Record<string, string>;
+  /** @example ["Error: something failed","at Worker.process"] */
+  stacktrace: string[];
+}
+
+export interface GetStatusScraperResponseDto {
+  job: GetStatusJobResponseDto;
+  index: number;
+  avgTime: number;
+  /** @default 0 */
+  state_index: EScrapeState;
+}
+
+export interface GetStatusScraperListResponseDto {
+  list: GetStatusScraperResponseDto[];
 }
 
 export interface EmailValidationScraperDto {
@@ -6113,6 +6588,54 @@ export interface PublishCodeScraperDto {
   order_id: string;
   /** code */
   code: string;
+}
+
+export interface BlockedAccountResponseDto {
+  id: string;
+  email: string;
+  cipherText: string;
+  iv: string;
+  securityAnswerOne: string;
+  securityAnswerTwo: string;
+  securityAnswerThree: string;
+  birthYear: string;
+  birthMonth: string;
+  birthDay: string;
+  isMerged: boolean;
+  orderId: string;
+  appleId: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export interface GetDetailAccountScraperResponseDto {
+  id: string;
+  email: string;
+  cipherText: string;
+  iv: string;
+  name: string;
+  family: string;
+  securityAnswerOne: string;
+  securityAnswerTwo: string;
+  securityAnswerThree: string;
+  birthYear: string;
+  birthMonth: string;
+  birthDay: string;
+  questionItems: number[];
+  isMerged: boolean;
+  blockedAccountId: string;
+  orderId: string;
+  appleId: string;
+  state: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  /** @format date-time */
+  stimateEndTime: string;
+  blockedAccount?: BlockedAccountResponseDto;
 }
 
 export interface WalletTransactionDto {
@@ -6339,14 +6862,6 @@ export interface ChargingPackageListResponseDto {
 export interface GetTransactionWalletByUserIdAdminDto {
   /** User Id */
   user_id: string;
-}
-
-/** gateway */
-export enum WALLET_TRANSACTION_GATEWAY {
-  ADMIN = "ADMIN",
-  PAYSTAR = "PAYSTAR",
-  ZIBAL = "ZIBAL",
-  PRODUCT = "PRODUCT",
 }
 
 export interface GetWalletTransactionFilterDto {
@@ -7474,17 +7989,6 @@ export interface GetCommentsResponseDto {
   comments: CommentWithAdminDataResponseDto[];
 }
 
-export enum COMMENT_TYPE {
-  Post = "post",
-  Product = "product",
-}
-
-export enum COMMENT_STATUS {
-  Pending = "pending",
-  Approve = "approve",
-  Denied = "denied",
-}
-
 export interface CreateCommentDto {
   /** Related Id */
   related_id: string;
@@ -7599,11 +8103,6 @@ export interface GetCategoryResponseDto {
   hasPrevPage?: boolean;
   /** The comment data */
   categories: CategoryWithRelationResponseDto[];
-}
-
-export enum CATEGORY_STATUS {
-  Active = "active",
-  DeActive = "deActive",
 }
 
 export interface CreateCategoryDto {
@@ -7905,16 +8404,6 @@ export interface DeletePostResponseDto {
   updated_at: string;
   /** Estimated reading time */
   reading_time: string;
-}
-
-export enum POST_STATUS {
-  Active = "active",
-  DeActive = "deActive",
-}
-
-export enum POST_TYPE {
-  Blog = "blog",
-  News = "news",
 }
 
 export interface CreatePostDto {
@@ -8321,13 +8810,6 @@ export interface UpdateRoleDto {
 export interface AssignRoleBodyDto {
   /** User Id */
   userId: string;
-}
-
-/** Status */
-export enum CONTACT_US_STATUS {
-  Pending = "pending",
-  Checking = "checking",
-  Checked = "checked",
 }
 
 export interface ContactUsResponseDto {
@@ -8786,6 +9268,10 @@ export interface OrderStatResponseDto {
   all: number;
   today: number;
   allProgressToday: number;
+  manualOrdersAllTime: number;
+  automatedOrdersAllTime: number;
+  manualOrdersToday: number;
+  automatedOrdersToday: number;
   lastOrders: OrderWihtUserRelatedResponseDto[];
 }
 
@@ -8804,17 +9290,10 @@ export interface OrderStatisticsResponseDto {
   updated_at: string;
 }
 
-export enum APPLEID_STAT_TYPE {
-  Charge = "charge",
-  Deduct = "deduct",
-}
-
 export interface AppleIdStatisticResponseDto {
-  appleid_statistic_id: string;
   country: CountryResponseDto;
   country_id: string;
   count: number;
-  type: APPLEID_STAT_TYPE;
   is_deleted?: boolean;
   /** @format date-time */
   created_at: string;
@@ -8849,11 +9328,49 @@ export interface InvoiceStatStatResponseDto {
   invoiceStatistics: PaymentResponseForInvoiceStatDto[];
 }
 
-export interface DashboardStatResponseDto {
-  todayContactus: number;
+export interface ContactUsStatsDto {
+  /** Today's contact us calls */
+  todayCalls: number;
+}
+
+export interface SalesStatsDto {
+  /** Today's total sales */
   todaySales: number;
-  appleidBalance: AppleIdStatisticResponseDto[];
-  orders: OrderStatisticsResponseDto[];
+  /** Today's US country-based sales */
+  todayUsSales: number;
+  /** Today's personal info sales */
+  todayPersonalInfoSales: number;
+}
+
+export interface OrderStatsDto {
+  /** Country-based orders count */
+  countryBased: number;
+  /** Personal info orders count */
+  personalInfo: number;
+  /** Other products sales count */
+  otherProducts: number;
+  /** Detailed breakdown of orders */
+  detailedBreakdown: OrderStatisticsResponseDto[];
+}
+
+export interface AppleIdStatsDto {
+  /** US Apple IDs count */
+  usAppleIds: number;
+  /** Other countries Apple IDs count */
+  otherAppleIds: number;
+  /** All Apple ID balances by country */
+  allBalances: AppleIdStatisticResponseDto[];
+}
+
+export interface DashboardStatResponseDto {
+  /** Contact us statistics */
+  contactUsStats: ContactUsStatsDto;
+  /** Sales statistics */
+  salesStats: SalesStatsDto;
+  /** Order statistics */
+  orderStats: OrderStatsDto;
+  /** Apple ID statistics */
+  appleIdStats: AppleIdStatsDto;
 }
 
 export interface OrderWihtoutRelatedResponseDto {
@@ -8962,6 +9479,8 @@ export interface AppleIdStatUSACountResponseDto {
   assignable: number;
   /** Count of non-assignable Apple IDs */
   non_assignable: number;
+  /** Count of USA non-assignable Apple IDs */
+  usa_non_assignable: number;
 }
 
 export interface OrderStatFieldsDto {
@@ -9108,6 +9627,16 @@ export interface ProductChartResponseDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -9385,33 +9914,16 @@ export interface TimerDashboardStatChartResponseDto {
   prevMonth: WeekAvgChartDto[];
 }
 
-export enum GroupByFields {
-  ProductId = "product_id",
-  CategoryId = "category_id",
-  UserId = "user_id",
+export interface OrderStatDailyFieldsDto {
+  count: number;
+  day: number;
+  month: number;
+  /** Total sales amount for this day */
+  salesAmount: number;
 }
 
-export enum OrderBy {
-  PaymentAmount = "payment_amount",
-  ProductCount = "product_count",
-}
-
-export enum TimerDashboardFilterType {
-  Today = "today",
-  Weekly = "weekly",
-  Monthly = "monthly",
-  Yearly = "yearly",
-}
-
-export enum TimerLogGroupByFields {
-  ProductId = "product_id",
-  ProductCategoryId = "product_category_id",
-  UserId = "user_id",
-  OrderId = "order_id",
-}
-
-export enum TimerLogOrderBy {
-  Seconds = "seconds",
+export interface OrderStatDailyResponseDto {
+  orders: OrderStatDailyFieldsDto[];
 }
 
 export interface ProductStateSellingDto {
@@ -9565,6 +10077,16 @@ export interface ProductItemDto {
    * @example false
    */
   is_auto_slug: boolean;
+  /**
+   * Pre order
+   * @example false
+   */
+  pre_order: boolean;
+  /**
+   * Assign Type
+   * @example "manual"
+   */
+  assign_type: ASSIGN_TYPE;
   /**
    * Product image alt
    * @example "اپل‌آی‌دی عمده"
@@ -9830,11 +10352,6 @@ export interface DeleteTagResponseDto {
 
 export interface GetTagByIdResponseDto {
   tag: TagResponseWithRelationDto;
-}
-
-export enum TAG_STATUS {
-  Active = "active",
-  DeActive = "deActive",
 }
 
 export interface CreateTagDto {
@@ -10104,12 +10621,6 @@ export interface GetOneOfferWithoutProductIdsResponseDto {
   offer: OfferResponseDto;
 }
 
-/** Type */
-export enum TYPE_QUERY_VALIDATION {
-  Specific = "specific",
-  Group = "group",
-}
-
 export interface CreateOfferDto {
   /** Is Auto */
   is_auto: boolean;
@@ -10316,18 +10827,6 @@ export interface UploadFileResponseDto {
   updated_at: string;
 }
 
-/** File Type */
-export enum FILE_TYPE {
-  Product = "product",
-  Avatar = "avatar",
-  AppleId = "apple_id",
-  AppleIdExcel = "apple_id_excel",
-  Setting = "setting",
-  Flag = "flag",
-  Blog = "blog",
-  IpgGateway = "ipg_gateway",
-}
-
 export interface UploadFileDto {
   /** File Type */
   type: FILE_TYPE;
@@ -10336,11 +10835,6 @@ export interface UploadFileDto {
    * @format binary
    */
   file: File;
-}
-
-export enum FileQueryType {
-  FileId = "file_id",
-  Name = "name",
 }
 
 export interface SettingEntityWithRelationDto {
@@ -10450,11 +10944,6 @@ export interface SettingEntityResponseDto {
   updated_at: string;
 }
 
-export enum SETTING_TYPE {
-  GeneralSetting = "general_setting",
-  Seo = "seo",
-}
-
 export interface CreateSettingDto {
   /** Key */
   key: string;
@@ -10481,11 +10970,6 @@ export interface JsonSeoResponseDto {
   type: string;
 }
 
-export enum RSS_FILE_NAME {
-  ProductXml = "product.xml",
-  BlogXml = "blog.xml",
-}
-
 export interface ElementDto {
   element_id: string;
   name: string;
@@ -10496,29 +10980,6 @@ export interface ElementDto {
   created_at: string;
   /** @format date-time */
   updated_at: string;
-}
-
-export enum FORM_CONTENT_HEADING_TYPE {
-  H1 = "h1",
-  H2 = "h2",
-  H3 = "h3",
-  H4 = "h4",
-  H5 = "h5",
-  H6 = "h6",
-}
-
-export enum FORM_TAB_ROW_CONTENT_TYPE {
-  Text = "text",
-  Title = "title",
-  Alert = "alert",
-  Link = "link",
-}
-
-export enum FORM_TAB_ROW_CONTENT_ALERT_TYPE {
-  Info = "info",
-  Success = "success",
-  Warning = "warning",
-  Error = "error",
 }
 
 export interface CreateTabRowElementOptions {
@@ -10562,16 +11023,6 @@ export interface CreateTabRowElementAlert {
   type: FORM_TAB_ROW_CONTENT_TYPE;
   /** text */
   text: string;
-}
-
-/** type */
-export enum FORM_TAB_ROW_CONTENT_SIZE {
-  H1 = "h1",
-  H2 = "h2",
-  H3 = "h3",
-  H4 = "h4",
-  H5 = "h5",
-  H6 = "h6",
 }
 
 export interface CreateTabRowContent {
@@ -11248,19 +11699,6 @@ export interface UpdateFormulaStatusResponseDto {
   count: number;
 }
 
-/** round type */
-export enum FORMULA_ROUND_TYPE {
-  Round = "round",
-  Floor = "floor",
-  Ceil = "ceil",
-  Truncate = "truncate",
-}
-
-/** product fields */
-export enum FORMULA_PRODUCT_FIELD {
-  Price = "price",
-}
-
 export interface CreateFormulaDto {
   /** formula id */
   form_id?: string;
@@ -11291,11 +11729,6 @@ export interface AssignFormulaToFormDto {
   form_id: string;
   /** tab id */
   tab_id: string;
-}
-
-export enum FORM_FORMULA_TAB_STATUS {
-  Active = "active",
-  DeActive = "deActive",
 }
 
 export interface UpdateFormulaStatusDto {
@@ -11735,24 +12168,6 @@ export interface GetDetailNotifierTemplateResponseDto {
   updated_at: string;
 }
 
-/** guard name */
-export enum NOTIFIER_METHOD_NAME {
-  Sms = "sms",
-  Email = "email",
-  PushNotification = "push_notification",
-}
-
-/** provider */
-export enum NOTIFIER_GATEWAY_PROVIDER {
-  Kavenegar = "kavenegar",
-}
-
-/** status */
-export enum NOTIFIER_GATEWAY_STATUS {
-  Active = "active",
-  Inactive = "inactive",
-}
-
 export interface CreateNotifierGatewayDto {
   /** name */
   name: string;
@@ -11996,6 +12411,15 @@ export enum TransactionWithRelationResponseDtoStatusEnum {
   Pending = "pending",
   Success = "success",
   Failed = "failed",
+}
+
+export enum ProductCategoryControllerGetCategoriesParamsExpandEnum {
+  Children = "children",
+  Parent = "parent",
+  Country = "country",
+  Products = "products",
+  AlertCategory = "alert_category",
+  Owner = "owner",
 }
 
 /** Apple ID type */
