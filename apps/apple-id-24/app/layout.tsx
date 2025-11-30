@@ -1,7 +1,7 @@
 import "@repo/ui/styles.css";
 import type { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
-import type { MenuItem } from "../components/organisms/sidebar";
+import type { MenuItem } from "../components/organisms/sidebar/types";
 import { iranyekanX, iranyekanXFaNum } from "../fonts";
 import "./globals.css";
 import MainLayout from "../components/templates/layout/mainLayout";

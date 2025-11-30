@@ -22,6 +22,7 @@ interface DropdownProps {
   locale?: "fa" | "en" | string;
   align?: "left" | "right";
   trigger?: "hover" | "click";
+  className?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> & {
@@ -32,6 +33,7 @@ const Dropdown: React.FC<DropdownProps> & {
   locale = "fa",
   align = "right",
   trigger = "click",
+  className
 }: DropdownProps) => {
   const isRTL = locale === "fa";
   const [open, setOpen] = useState(false);
@@ -67,11 +69,11 @@ const Dropdown: React.FC<DropdownProps> & {
   ]);
 
   return (
-    <div className="relative inline-block text-left">
+    <div className={twMerge("w-full relative inline-block text-left",className)}>
       <button
         ref={refs.setReference}
         {...getReferenceProps()}
-        className="focus:outline-none"
+        className="w-full focus:outline-none"
       >
         {label}
       </button>

@@ -41,19 +41,22 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       className
     );
 
-    return (
-      <div className="flex flex-col space-y-1">
-        {label ? (
+    if (label) {
+      return (
+        <div className="flex flex-col space-y-1">
           <label
             htmlFor={finalId}
             className="text-sm font-medium text-gray-700"
           >
             {label}
           </label>
-        ) : null}
+          <InputBase id={finalId} ref={ref} className={inputClass} {...props} />
+        </div>
+      );
+    } else
+      return (
         <InputBase id={finalId} ref={ref} className={inputClass} {...props} />
-      </div>
-    );
+      );
   }
 );
 
