@@ -1,6 +1,6 @@
 import { ButtonHTMLAttributes } from "react";
 
-export type ButtonVariants = "primary" | "secondary";
+export type ButtonVariants = "primary" | "secondary" | 'error';
 
 export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   children: React.ReactNode;

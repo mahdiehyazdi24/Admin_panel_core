@@ -17,3 +17,5 @@ export { default as Textarea } from "./textarea";
 export { default as Switch } from "./switch";
 
 export { default as Error } from "./error";
+
+export { default as Tag } from "./tag";
